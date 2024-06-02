@@ -254,7 +254,7 @@ async function createProject(projectName) {
     "package.json",
     "README.md",
     "views/index.ejs",
-    ".env",
+    ".env.template",
   ];
 
   try {
@@ -273,6 +273,11 @@ async function createProject(projectName) {
       }
       await fs.writeFile(filePath, content);
     }
+
+    await fs.rename(
+      path.join(projectPath, ".env.template"),
+      path.join(projectPath, ".env")
+    );
 
     console.log(`Created project at ${projectPath}`);
   } catch (err) {
