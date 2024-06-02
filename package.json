@@ -2,6 +2,16 @@
   "name": "expresso-cli",
   "version": "0.0.1",
   "main": "index.js",
+  "license": "MIT",
+  "description": "A simple CLI for generating express.js boilerplate",
+  "keywords": [
+    "express",
+    "cli",
+    "boilerplate",
+    "generator",
+    "express.js",
+    "node.js"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/D3R50N/expresso.git"
