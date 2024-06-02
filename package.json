@@ -1,0 +1,14 @@
+{
+  "name": "expresso",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "expresso": "./index.js"
+  },
+  
+  "dependencies": {
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^8.0.0"
+  }
+}
