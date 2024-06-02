@@ -8,7 +8,7 @@ Expresso is a command-line interface (CLI) tool designed to quickly generate Exp
 To install Expresso globally on your machine, use npm:
 
 ```sh
-npm install -g expresso
+npm install -g @happy.dev/expresso
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ expresso new myapp
 
 This command will create a new folder named `myapp` with the following project structure:
 
-```
+```bat
 myapp/
 ├── config/
 │   ├── config.js
