@@ -7,7 +7,7 @@
     "url": "https://github.com/D3R50N/expresso.git"
   },
   "bin": {
-    "expresso": "./index.js"
+    "expresso": "expresso"
   },
   "dependencies": {
     "commander": "^12.1.0",
