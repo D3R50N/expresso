@@ -8,7 +8,7 @@ Expresso is a command-line interface (CLI) tool designed to quickly generate Exp
 To install Expresso globally on your machine, use npm:
 
 ```sh
-npm install -g @happy.dev/expresso
+npm install -g expresso-cli
 ```
 
 ## Usage
@@ -63,7 +63,20 @@ expresso help
 or
 
 ```sh
-expresso -h
+expresso
+```
+
+After creating a new project, you can navigate to the project folder and install the dependencies:
+
+```sh
+cd myapp
+npm install
+```
+
+To start the ExpressJS server, use the following command:
+
+```sh
+npm start
 ```
 
 ## Project Structure
