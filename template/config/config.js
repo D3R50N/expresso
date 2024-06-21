@@ -16,5 +16,6 @@ module.exports = {
   dbPort: process.env.MONGODB_PORT || 27017,
   dbName: process.env.MONGODB_DBNAME || "",
   jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
-  setupDb: process.env.SETUP_DB || false,
+  setupDb: process.env.SETUP_DB == "true",
+  environment : process.env.NODE_ENV || "development"
 };

@@ -1,22 +1,37 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/userModel");
 const config = require("../../config/config");
+const errors = require("../../core/errors");
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
 
-    if (!user || !user.comparePassword(password)) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    if (!email) {
+      return errors.json(res, errors.code.EMAIL_REQUIRED);
     }
 
+    if (!password) {
+      return errors.json(res, errors.code.PASSWORD_REQUIRED);
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return errors.json(res, errors.code.USER_NOT_EXIST);
+    }
+
+    if (!(await user.comparePassword(password))) {
+      return errors.json(res, errors.code.PASSWORD_INCORRECT);
+    }
     const token = jwt.sign({ userId: user._id }, config.jwtSecret, {
       expiresIn: "1h",
     });
     res.json({ token });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res
+      .status(500)
+      .json({ error: err.message, code: errors.code.SERVER_ERROR.code });
   }
 };
 
@@ -26,6 +41,7 @@ exports.register = async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (err.code === 11000) errors.json(res, errors.code.USER_EXISTS);
+    else errors.json(res, errors.code.USER_NOT_CREATED);
   }
 };

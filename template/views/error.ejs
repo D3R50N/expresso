@@ -2,11 +2,13 @@
 <html>
 
 <head>
-    <title>Error</title>
+    <title>Error <%= title %></title>
+    <link rel="stylesheet" href="/css/error.css">
 </head>
 
 <body>
-    <h1><%= message %></h1>
+    <span id="title"><%= title %></span>
+    <span id="message"><%= message %></span>
 </body>
 
 </html>

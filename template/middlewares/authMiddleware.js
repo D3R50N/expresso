@@ -1,10 +1,11 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
+const errors = require("../core/errors");
 
 module.exports = (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
+  const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
-    return res.status(401).json({ message: "Access denied" });
+    return errors.json(res, errors.code.AUTH_TOKEN_MISSSING);
   }
 
   try {
@@ -12,6 +13,6 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(400).json({ message: "Invalid token" });
+    return errors.json(res, errors.code.AUTH_TOKEN_INVALID);
   }
 };

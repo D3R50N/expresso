@@ -369,6 +369,102 @@ async function generateController(controllerName) {
   );
 }
 
+async function generateModel(modelName) {
+  const modelPath = path.join(
+    process.cwd(),
+    "models",
+    `${toLitt(modelName + " model")}.js`
+  );
+
+  if (fs.existsSync(modelPath)) {
+    var prompt = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwrite",
+        message: "Model already exists, overwrite?",
+        default: false,
+      },
+    ]);
+
+    if (!prompt.overwrite) return;
+  }
+
+  const modelTemplatePath = path.join(generatorPath, "model.js");
+  await fs.copy(modelTemplatePath, modelPath);
+  await setVarInFile({
+    filePath: modelPath,
+    vars: ["MODEL_NAME", "MODEL_NAME_U"],
+    values: [toLitt(modelName), toLitt(modelName, true)],
+  });
+
+  console.log("Generated", path.join("models", `${toLitt(modelName + " model")}.js`));
+}
+async function generate() {
+  const choices = [
+    "Controller",
+    "JWT Secret Key",
+    "Middleware",
+    "Migration",
+    "Model",
+    "Route",
+    "Seeder",
+    "Service",
+    "View",
+  ];
+  const choice = await inquirer.prompt([
+    {
+      type: "list",
+      name: "type",
+      message: "What do you want to generate ?",
+      choices: choices,
+    },
+  ]);
+  const index = choices.indexOf(choice.type);
+
+  switch (index) {
+    case 0:
+      var controllerName = await inquirer.prompt([
+        {
+          type: "input",
+          name: "controllerName",
+          message: "Enter controller name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "Controller name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      generateController(controllerName.controllerName);
+      break;
+    case 1:
+      generateJWT();
+      break;
+    case 4:
+      var modelName = await inquirer.prompt([
+        {
+          type: "input",
+          name: "modelName",
+          message: "Enter model name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "Model name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      generateModel(modelName.modelName);
+      break;
+
+    default:
+      break;
+  }
+}
+
 module.exports = {
   toLitt,
   setVarInFile,
@@ -378,4 +474,6 @@ module.exports = {
   getEnvKey,
   deleteEnvKey,
   generateController,
+  generateModel,
+  generate,
 };
