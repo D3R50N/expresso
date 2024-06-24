@@ -102,9 +102,6 @@ async function createProject(projectName) {
         name: "DBUSER",
         message: "Enter database user:",
         validate: function (input) {
-          if (input.trim() == "") {
-            return "Database user cannot be empty";
-          }
           if (input.includes(" ")) {
             return "Database user cannot contain spaces";
           }
@@ -163,6 +160,8 @@ async function createProject(projectName) {
     "package.json",
     "README.md",
     "views/index.ejs",
+    "views/login.ejs",
+    "views/register.ejs",
     ".env.template",
   ];
 
@@ -185,6 +184,7 @@ async function createProject(projectName) {
     );
 
     console.log(`Created project at ${projectPath}`);
+    generateJWT();
   } catch (err) {
     console.error("Error creating project:", err);
   }
@@ -241,6 +241,7 @@ function generateJWT() {
     .toString("hex")}`;
   content = lines.join("\n");
   fs.writeFileSync(envPath, content);
+  console.log("Genereated a new JWT secret 🔒");
 }
 function setEnvKey(key, value) {
   if (!value) value = "";

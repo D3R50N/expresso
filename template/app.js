@@ -1,11 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const api_routes = require("./routes/api");
 const web_routes = require("./routes/web");
 const config = require("./config/config");
 const errorHandler = require("./middlewares/errorHandler");
-const authMiddleware = require("./middlewares/authMiddleware");
+const apiAuthMiddleware = require("./middlewares/api/authMiddleware");
 const User = require("./models/userModel");
+const ROUTES = require("./routes/routes");
 
 const app = express();
 
@@ -13,6 +15,7 @@ const app = express();
 // Static Files
 app.use(express.static("public"));
 
+app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,14 +23,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
 // TODO: Remove Auth Middleware Test
-app.use("/protected", authMiddleware, async (req, res) => {
+app.use("/protected", apiAuthMiddleware, async (req, res) => {
   var user = await User.findById(req.user.userId)
   res.send("Protected Route from " + user.email);
 });
 
 // Routes
-app.use("/", web_routes);
-app.use("/api", api_routes);
+app.use(ROUTES.WEB.INDEX, web_routes);
+app.use(ROUTES.API.INDEX, api_routes);
 
 // Error Handling Middleware
 app.use(errorHandler.e404);

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[##NAME##] - Login</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+    <div id="container">
+        <h1>LOGIN</h1>
+        <pre>[##NAME##] - by Expresso</pre>
+        <form action="/login" method="POST">
+            <input type="text" required name="email" placeholder="Your email address" value="<%= locals.body?.email %>">
+            <input type="password" required name="password" placeholder="Your password">
+            <div class="btns">
+                <input type="submit" value="Continue">
+                <span>or</span>
+                <a href="/register" class="btn"><input type="button" value="Create an account"></a>
+            </div>
+        </form>
+    </div>
+    <% if (locals.error) { %>
+    <div id="error"><%= error.message %></div>
+    <% } %>
+
+
+</body>
+
+</html>
