@@ -1,7 +1,9 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-var dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${process.env.MONGODB_PORT || 27017}/${process.env.MONGODB_DBNAME}`;
+var dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${
+  process.env.MONGODB_PORT || 27017
+}/${process.env.MONGODB_DBNAME}`;
 
 if (process.env.MONGODB_USER && process.env.SETUP_DB == "true") {
   if (!process.env.MONGODB_PASSWORD)
@@ -17,5 +19,9 @@ module.exports = {
   dbName: process.env.MONGODB_DBNAME || "",
   jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
   setupDb: process.env.SETUP_DB == "true",
-  environment : process.env.NODE_ENV || "development"
+  environment: process.env.NODE_ENV || "development",
+  parserLimit: process.env.PARSER_LIMIT || "50mb",
+  parserJsonLimit: process.env.PARSER_JSON_LIMIT || "50mb",
+  jwtMaxDate: process.env.JWT_MAX_DATE || "30d",
+  cookieMaxDate: process.env.COOKIE_MAX_DATE || "30d",
 };

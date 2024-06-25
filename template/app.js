@@ -16,17 +16,13 @@ const app = express();
 app.use(express.static("public"));
 
 app.use(cookieParser(config.jwtSecret));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: config.parserJsonLimit }));
+app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
+
 
 // EJS Template Engine
 app.set("view engine", "ejs");
 
-// TODO: Remove Auth Middleware Test
-app.use("/protected", apiAuthMiddleware, async (req, res) => {
-  var user = await User.findById(req.user.userId)
-  res.send("Protected Route from " + user.email);
-});
 
 // Routes
 app.use(ROUTES.WEB.INDEX, web_routes);
