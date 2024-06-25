@@ -2,6 +2,8 @@ const ROUTES = {
   WEB: {
     INDEX: "/",
     LOGIN: "/login",
+    LOGOUT: "/logout",
+    LOGOUT_EXPIRED: "/logout?_exp=1",
     REGISTER: "/register",
   },
   DOCS: "/api-docs",

@@ -18,11 +18,18 @@ exports.index = async (req, res) => {
 
 exports.post = async (req, res) => {
   try {
+    
+    // Store base64 image in image field
+    if (req.body.image_base64) {
+      req.body.image = req.body.image_base64;
+      delete req.body.image_base64;
+    }
+
     const user = new User(req.body);
     await user.save();
     const token = generateToken(user);
 
-    setCookie(res,"_tk", token);
+    setCookie(res, "_tk", token);
 
     const redirect = req.query.redirect || ROUTES.WEB.INDEX;
     res.redirect(redirect);

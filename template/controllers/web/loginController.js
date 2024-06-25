@@ -9,9 +9,9 @@ const { generateToken } = require("../../services/authService");
 
 exports.index = async (req, res) => {
   try {
-    var hasExpired = getCookie(req,'_exp') || false;
-    if (hasExpired) {
-      clearCookie(res,"_exp");
+    var expiredCode = getCookie(req, "_exp") || 0;
+    if (expiredCode == 1) {
+      clearCookie(res, "_exp");
 
       return res.render("login", {
         error: {
@@ -59,7 +59,7 @@ exports.post = async (req, res) => {
     }
     const token = generateToken(user);
 
-    setCookie(res,"_tk", token);
+    setCookie(res, "_tk", token);
 
     const redirect = req.query.redirect || ROUTES.WEB.INDEX;
     res.redirect(redirect);

@@ -1,15 +1,39 @@
-
-#name{
-    color: var(--main-color);
-    font-weight: bold;
+#name {
+  color: var(--main-color);
+  font-weight: bold;
 }
 
-p, code{
-    color: grey;
+p,
+code {
+  color: grey;
 }
 
-code{
-    background-color: #1E1E2B;
-    padding: 5px;
-    border-radius: 5px;
+code {
+  background-color: #1e1e2b;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+}
+img {
+  display: block;
+  margin: 0 auto;
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+#btn_logout {
+  color: var(--main-color);
+  background-color  : #fff1;
+  border: 1px solid var(--main-color);
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }

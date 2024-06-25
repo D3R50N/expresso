@@ -5,17 +5,15 @@
     <title>Expresso - [##NAME##]</title>
      <link rel="stylesheet" href="/css/main.css">
      <link rel="stylesheet" href="/css/home.css">
-     <style>
-         h1 {
-             text-align: center;
-         }
-     </style>
 </head>
 
 <body>
+    <img src="<%=image %>" alt="profile picture">
     <h1>Welcome to [##NAME##] by <span id="name"><%= name %></span> 🚀</h1>
     <p>Set the "name" query in url to change 😉</p>
     <code>?name=YOUR NAME</code>
+    <a href="/logout" id="btn_logout">LOGOUT ↪</a>
+
 </body>
 
 </html>

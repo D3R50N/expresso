@@ -7,6 +7,7 @@
     <title>[##NAME##] - Sign Up</title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/register.css">
 </head>
 
 <body>
@@ -14,9 +15,11 @@
         <h1>Sign Up</h1>
         <pre>[##NAME##] - by Expresso</pre>
         <form action="/register" method="POST">
-
             <input type="text" required name="email" placeholder="Your email address" value="<%= locals.body?.email %>">
             <input type="password" required name="password" placeholder="Your password">
+            <label for="image" id="img_label">Choose a profile picture</label>
+            <input type="file" name="image" id="image" accept=".png;.jpg;.jpeg">
+            <input type="hidden" name="image_base64" id="image_base64">
             <div class="btns">
                 <input type="submit" value="Continue">
                 <span>or</span>
@@ -27,6 +30,7 @@
     <% if (locals.error) { %>
     <div id="error"><%= error.message %></div>
     <% } %>
+    <script src="/js/register.js"></script>
 </body>
 
 </html>
