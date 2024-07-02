@@ -183,8 +183,13 @@ async function createProject(projectName) {
       path.join(projectPath, ".env")
     );
 
+     await fs.rename(
+       path.join(projectPath, ".git.template"),
+       path.join(projectPath, ".git")
+     );
+
     console.log(`Created project at ${projectPath}`);
-    generateJWT();
+    generateJWT(projectName);
   } catch (err) {
     console.error("Error creating project:", err);
   }
@@ -210,8 +215,8 @@ function promptProject(projectName) {
   } else createProject(projectName);
 }
 
-function generateJWT() {
-  const envPath = path.join(process.cwd(), ".env");
+function generateJWT(projectFolder="") {
+  const envPath = path.join(process.cwd(),projectFolder, ".env");
   if (!fs.existsSync(envPath)) {
     console.error("Error: .env file not found");
     return;
