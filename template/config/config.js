@@ -1,21 +1,36 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-var dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${
-  process.env.MONGODB_PORT || 27017
-}/${process.env.MONGODB_DBNAME}`;
+var dbUri;
+if (process.env.MONGODB_URI) {
+  if (process.env.MONGODB_URI.endsWith("/"))
+    process.env.MONGODB_URI = process.env.MONGODB_URI.slice(0, -1);
+  let params;
+  if (process.env.MONGODB_URI.includes("?")) {
+    params = process.env.MONGODB_URI.split("?")[1];
+    process.env.MONGODB_URI = process.env.MONGODB_URI.split("?")[0];
+  }
 
-if (process.env.MONGODB_USER && process.env.SETUP_DB == "true") {
-  if (!process.env.MONGODB_PASSWORD)
-    console.log("WARNING: Login DB without password.");
-  dbUri = `${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${dbUri}`;
+  dbUri = `${process.env.MONGODB_URI}/${process.env.MONGODB_DBNAME}${
+    params ? "?" + params : ""
+  }`;
+} else {
+  dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${
+    process.env.MONGODB_PORT || 27017
+  }/${process.env.MONGODB_DBNAME}`;
+
+  if (process.env.MONGODB_USER && process.env.SETUP_DB == "true") {
+    if (!process.env.MONGODB_PASSWORD)
+      console.log("WARNING: Login DB without password.");
+    dbUri = `${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${dbUri}`;
+  }
+  dbUri = `mongodb://${dbUri}`;
 }
-
 module.exports = {
   port: process.env.PORT || 3000,
-  dbUri: "mongodb://" + dbUri,
-  dbHost: process.env.MONGODB_HOST || "127.0.0.1",
-  dbPort: process.env.MONGODB_PORT || 27017,
+  dbUri,
+  dbHost: process.env.MONGODB_HOST,
+  dbPort: process.env.MONGODB_PORT,
   dbName: process.env.MONGODB_DBNAME || "",
   jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
   setupDb: process.env.SETUP_DB == "true",

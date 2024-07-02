@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const api_routes = require("./routes/api");
 const web_routes = require("./routes/web");
 const config = require("./config/config");
+const logger = require("./utils/logger");
 const errorHandler = require("./middlewares/errorHandler");
 const apiAuthMiddleware = require("./middlewares/api/authMiddleware");
 const User = require("./models/userModel");
@@ -36,7 +37,7 @@ app.use(errorHandler.e500);
 app.listen(config.port, () => {
   if (config.setupDb && config.dbUri) require("./config/db");
   const address=config.environment=="development"?"http://localhost":"";
-  console.log(`Server is running on port ${address}:${config.port}`);
+  logger.info(`Server is running on port ${address}:${config.port}`);
 });
 
 module.exports = app;

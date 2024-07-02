@@ -5,7 +5,16 @@ const logger = winston.createLogger({
   format: winston.format.json(),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: "app.log" }),
+    new winston.transports.File({
+      filename: (function () {
+        const date = new Date();
+        const logFile = `logs/${date.getDate()}_${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}_${date.getFullYear()}.log`;
+
+        return logFile;
+      })(),
+    }),
   ],
 });
 
