@@ -12,6 +12,7 @@ exports.index = async (req, res) => {
     return res.render("register");
   } catch (err) {
     console.log(err.message);
+    req.error = err;
     e400(req, res);
   }
 };

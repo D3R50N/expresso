@@ -22,6 +22,7 @@ exports.index = async (req, res) => {
     return res.render("login");
   } catch (err) {
     console.log(err.message);
+    req.error = err;
     e400(req, res);
   }
 };
@@ -65,6 +66,7 @@ exports.post = async (req, res) => {
     res.redirect(redirect);
   } catch (err) {
     console.log(err.message);
+    req.error = err;
     e500(req, res);
   }
 };
