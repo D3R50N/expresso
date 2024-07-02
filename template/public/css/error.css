@@ -6,8 +6,20 @@
 
 }
 
-#message{
+#message {
     color: grey;
     font-size: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    gap: .4em;
+    padding: 1em;
+    text-align: center;
 }
-
+#message code{
+    font-size: small;
+    padding: .2em;
+    border-radius: .2em;
+    background-color: rgba(33, 244, 33, 0.155);
+    border: 1px solid rgb(47, 139, 62);
+}

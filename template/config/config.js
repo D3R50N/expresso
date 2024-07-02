@@ -26,17 +26,21 @@ if (process.env.MONGODB_URI) {
   }
   dbUri = `mongodb://${dbUri}`;
 }
+const environment = process.env.NODE_ENV || "development";
 module.exports = {
-  port: process.env.PORT || 3000,
   dbUri,
+  environment,
+  port: process.env.PORT || 3000,
   dbHost: process.env.MONGODB_HOST,
   dbPort: process.env.MONGODB_PORT,
   dbName: process.env.MONGODB_DBNAME || "",
   jwtSecret: process.env.JWT_SECRET || "your_jwt_secret",
   setupDb: process.env.SETUP_DB == "true",
-  environment: process.env.NODE_ENV || "development",
   parserLimit: process.env.PARSER_LIMIT || "50mb",
   parserJsonLimit: process.env.PARSER_JSON_LIMIT || "50mb",
   jwtMaxDate: process.env.JWT_MAX_DATE || "30d",
   cookieMaxDate: process.env.COOKIE_MAX_DATE || "30d",
+
+  isDev: ["dev", "development", "develop", "test"].includes(environment),
+  isProd: ["prod", "production", "release", "released"].includes(environment),
 };

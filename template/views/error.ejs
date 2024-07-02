@@ -9,7 +9,10 @@
 
 <body>
     <span id="title"><%= title %></span>
-    <span id="message"><%= message %></span>
+    <span id="message"><% if (locals.devMode) { %>
+     <code>DEV MODE</code>
+    <% } %> 
+        <span><%= message %></span></span>
 </body>
 
 </html>

@@ -36,8 +36,8 @@ app.use(errorHandler.e500);
 
 app.listen(config.port, () => {
   if (config.setupDb && config.dbUri) require("./config/db");
-  const address=config.environment=="development"?"http://localhost":"";
-  logger.info(`Server is running on port ${address}:${config.port}`);
+  const address=config.isDev?"http://localhost:":"port ";
+  logger.info(`Server is running on ${address}${config.port}`);
 });
 
 module.exports = app;
