@@ -40,6 +40,11 @@ exports.code = Object.freeze({
     status: 400,
     code: "USER_EXISTS",
   },
+  INVALID_REQUEST: {
+    message: "Invalid request",
+    status: 400,
+    code: "INVALID_REQUEST",
+  },
   USER_NOT_CREATED: {
     message: "User not created",
     status: 400,

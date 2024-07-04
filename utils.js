@@ -6,6 +6,32 @@ const process = require("process");
 const generatorPath = path.join(__dirname, "generator");
 const templatePath = path.join(__dirname, "template");
 
+const notApiPaths = [
+  "controllers/web",
+  "middlewares/web",
+  "routes/web",
+  "views",
+  "public/css",
+  "public/js",
+  "middlewares/errorHandler.js",
+  "app.js",
+  "routes/routes.js",
+];
+
+const apiPaths = [
+  "middlewares/errorHandler.api.js",
+  "app.api.js",
+  "routes/routes.api.js",
+];
+
+const namesMap = {
+  ".git.template": ".git",
+  ".env.template": ".env",
+  "errorHandler.api.js": "errorHandler.js",
+  "app.api.js": "app.js",
+  "routes.api.js": "routes.js",
+};
+
 function toLitt(str = "", capitalize = false) {
   const asPkg = str
     .split(" ")
@@ -28,11 +54,14 @@ function toLitt(str = "", capitalize = false) {
   return name;
 }
 
-async function setVarInFile({ filePath, vars = [], values = [] }) {
+async function setVarsInFile(filePath, vars = {}) {
+  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) return;
+
   let content = await fs.readFile(filePath, "utf-8");
-  for (let i in vars) {
-    let varName = vars[i];
-    let value = values[i] ?? "";
+  for (let varName in vars) {
+    if (!content.includes(`[##${varName}##]`)) continue;
+
+    let value = vars[varName];
     content = content.split(`[##${varName}##]`).join(value);
   }
   await fs.writeFile(filePath, content);
@@ -40,6 +69,7 @@ async function setVarInFile({ filePath, vars = [], values = [] }) {
 
 async function createProject(projectName) {
   const projectPath = path.join(process.cwd(), projectName);
+  var projectBasePath = projectName || "";
   if (!projectName) projectName = process.cwd().split(path.sep).pop();
 
   const PKG_NAME = projectName
@@ -57,6 +87,53 @@ async function createProject(projectName) {
       return v.charAt(0).toUpperCase() + v.slice(1);
     })
     .join("");
+
+  var prompt = await inquirer.prompt([
+    {
+      type: "confirm",
+      name: "apiOnly",
+      message: "Start project with API only ?",
+      default: true,
+    },
+  ]);
+
+  const IS_API_ONLY = prompt.apiOnly;
+
+  function canCopyPath(path = "") {
+    if (!IS_API_ONLY) return true;
+
+    let templatePath = path.replaceAll("\\", "/");
+    if (notApiPaths.includes(templatePath)) {
+      return false;
+    }
+
+    for (let notApiPath of notApiPaths) {
+      if (templatePath.startsWith(notApiPath)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  async function copyPath(templateToCopy) {
+    if (!canCopyPath(templateToCopy)) {
+      fs.removeSync(path.join(projectPath, templateToCopy));
+      return;
+    }
+    var templateName = templateToCopy;
+    for (let nameToReplace in namesMap) {
+      templateName = templateName.replaceAll(
+        nameToReplace,
+        namesMap[nameToReplace]
+      );
+    }
+
+    await fs.copy(
+      path.join(templatePath, templateToCopy),
+      path.join(projectPath, templateName)
+    );
+    await setVarsInFile(path.join(projectPath, templateName), vars);
+  }
 
   var configure_db = await inquirer.prompt([
     {
@@ -134,62 +211,33 @@ async function createProject(projectName) {
     DBPORT = db_details.DBPORT;
   }
 
-  const var_to_search = [
-    "PKG_NAME",
-    "NAME",
-    "PORT",
-    "SETUP_DB",
-    "DBHOST",
-    "DBPORT",
-    "DBNAME",
-    "DBUSER",
-    "DBPASSWORD",
-  ];
-  const var_to_replace = [
-    PKG_NAME,
-    NAME,
-    PORT,
-    SETUP_DB,
-    DBHOST,
-    DBPORT,
-    DBNAME,
-    DBUSER,
-    DBPASSWORD,
-  ];
-  const files_to_replace = [
-    "package.json",
-    "README.md",
-    "views/index.ejs",
-    "views/login.ejs",
-    "views/register.ejs",
-    ".env.template",
-  ];
+  const vars = {
+    PKG_NAME: PKG_NAME,
+    NAME: NAME,
+    PORT: PORT,
+    SETUP_DB: SETUP_DB,
+    DBHOST: DBHOST,
+    DBPORT: DBPORT,
+    DBNAME: DBNAME,
+    DBUSER: DBUSER,
+    DBPASSWORD: DBPASSWORD,
+  };
 
   try {
     await fs.ensureDir(projectPath);
-    await fs.copy(templatePath, projectPath);
-
-    for (let i = 0; i < files_to_replace.length; i++) {
-      const filePath = path.join(projectPath, files_to_replace[i]);
-      await setVarInFile({
-        filePath,
-        vars: var_to_search,
-        values: var_to_replace,
-      });
+    const templatesToCopy = await fs.readdir(templatePath, {
+      recursive: true,
+    });
+    for (let templateToCopy of templatesToCopy) {
+      await copyPath(templateToCopy);
     }
-
-    await fs.rename(
-      path.join(projectPath, ".env.template"),
-      path.join(projectPath, ".env")
-    );
-
-     await fs.rename(
-       path.join(projectPath, ".git.template"),
-       path.join(projectPath, ".git")
-     );
-
+    for (let templateToCopy of apiPaths) {
+      if (IS_API_ONLY) await copyPath(templateToCopy);
+      fs.removeSync(path.join(projectPath, templateToCopy));
+    }
     console.log(`Created project at ${projectPath}`);
-    generateJWT(projectName);
+
+    generateJWT(projectBasePath);
   } catch (err) {
     console.error("Error creating project:", err);
   }
@@ -215,8 +263,9 @@ function promptProject(projectName) {
   } else createProject(projectName);
 }
 
-function generateJWT(projectFolder="") {
-  const envPath = path.join(process.cwd(),projectFolder, ".env");
+function generateJWT(projectFolder = "") {
+  if (typeof projectFolder !== "string") projectFolder = "";
+  const envPath = path.join(process.cwd(), projectFolder, ".env");
   if (!fs.existsSync(envPath)) {
     console.error("Error: .env file not found");
     return;
@@ -363,10 +412,8 @@ async function generateController(controllerName) {
 
   const controllerTemplatePath = path.join(generatorPath, "controller.js");
   await fs.copy(controllerTemplatePath, controllerPath);
-  await setVarInFile({
-    filePath: controllerPath,
-    vars: ["CONTROLLER_NAME"],
-    values: [toLitt(controllerName, true)],
+  await setVarsInFile(controllerPath, {
+    CONTROLLER_NAME: toLitt(controllerName, true),
   });
 
   console.log(
@@ -397,13 +444,15 @@ async function generateModel(modelName) {
 
   const modelTemplatePath = path.join(generatorPath, "model.js");
   await fs.copy(modelTemplatePath, modelPath);
-  await setVarInFile({
-    filePath: modelPath,
-    vars: ["MODEL_NAME", "MODEL_NAME_U"],
-    values: [toLitt(modelName), toLitt(modelName, true)],
+  await setVarsInFile(modelPath, {
+    MODEL_NAME: toLitt(modelName),
+    MODEL_NAME_U: toLitt(modelName, true),
   });
 
-  console.log("Generated", path.join("models", `${toLitt(modelName + " model")}.js`));
+  console.log(
+    "Generated",
+    path.join("models", `${toLitt(modelName + " model")}.js`)
+  );
 }
 async function generate() {
   const choices = [
@@ -473,7 +522,7 @@ async function generate() {
 
 module.exports = {
   toLitt,
-  setVarInFile,
+  setVarsInFile,
   promptProject,
   generateJWT,
   setEnvKey,
