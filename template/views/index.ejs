@@ -8,8 +8,9 @@
 </head>
 
 <body>
+    
     <img src="<%=image %>" alt=" ">
-    <h1>Welcome to [##NAME##] by <span id="name"><%= name %></span> 🚀</h1>
+    <%- include("components/welcome.ejs") %>
     <p>Set the "name" query in url to change 😉</p>
     <code>?name=YOUR NAME</code>
     <a href="/logout" id="btn_logout">LOGOUT ↪</a>

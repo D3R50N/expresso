@@ -5,8 +5,8 @@ const ROUTES = require("../routes");
 
 const router = express.Router();
 
-router.use(ROUTES.API.USERS.INDEX, userRoutes);
-router.use(ROUTES.API.AUTH.INDEX, authRoutes);
+router.use(ROUTES.USERS, userRoutes);
+router.use(ROUTES.AUTH, authRoutes);
 
 
 router.use((req, res) => {

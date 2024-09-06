@@ -8,12 +8,12 @@ const logoutController = require("../../controllers/web/logoutController");
 const registerController = require("../../controllers/web/registerController");
 const preventLogin = require("../../middlewares/web/preventLogin");
 
-router.get(ROUTES.WEB.INDEX, webAuthMiddleware, homeController.index);
-router.get(ROUTES.WEB.LOGIN, preventLogin, loginController.index);
-router.get(ROUTES.WEB.LOGOUT, logoutController.index);
-router.get(ROUTES.WEB.REGISTER, preventLogin, registerController.index);
+router.get(ROUTES.BASE, webAuthMiddleware, homeController.index);
+router.get(ROUTES.LOGIN, preventLogin, loginController.index);
+router.get(ROUTES.LOGOUT, logoutController.index);
+router.get(ROUTES.REGISTER, preventLogin, registerController.index);
 
-router.post(ROUTES.WEB.LOGIN, loginController.post);
-router.post(ROUTES.WEB.REGISTER, registerController.post);
+router.post(ROUTES.LOGIN, loginController.post);
+router.post(ROUTES.REGISTER, registerController.post);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const { code } = require("../../core/errors");
 module.exports = async (req, res, next) => {
   const token = getCookie(req, "_tk");
   if (!token) {
-    return res.redirect(ROUTES.WEB.LOGIN);
+    return res.redirect(ROUTES.LOGIN);
   }
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
@@ -18,6 +18,6 @@ module.exports = async (req, res, next) => {
     if (!user) throw new Error(code.USER_NOT_FOUND);
     next();
   } catch (err) {
-    return res.redirect(ROUTES.WEB.LOGOUT_EXPIRED);
+    return res.redirect(ROUTES.LOGOUT_EXPIRED);
   }
 };

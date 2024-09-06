@@ -7,7 +7,7 @@ exports.index = async (req, res) => {
     const expNumber = req.query._exp || 0;
     clearCookie(res, "_tk");
     setCookie(res, "_exp", expNumber);
-    return res.redirect(ROUTES.WEB.LOGIN);
+    return res.redirect(ROUTES.LOGIN);
   } catch (err) {
     console.log(err.message);
     req.error = err;

@@ -1,23 +1,28 @@
 const User = require("../../models/userModel");
 const errors = require("../../core/errors");
 
-
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const limit = req.query.limit;
+
+    const users = await (limit
+      ? User.find().limit(parseInt(limit))
+      : User.find());
     res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ error: err.message, code:errors.code.SERVER_ERROR.code });
+    res
+      .status(500)
+      .json({ error: err.message, code: errors.code.SERVER_ERROR.code });
   }
 };
 
 exports.getUserById = async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-      res.status(200).json(user);
-    } catch (err) {
-      errors.json(res, errors.code.USER_NOT_FOUND);
-    }
+  try {
+    const user = await User.findById(req.params.id);
+    res.status(200).json(user);
+  } catch (err) {
+    errors.json(res, errors.code.USER_NOT_FOUND);
+  }
 };
 
 exports.getUserAttribute = async (req, res) => {
@@ -31,7 +36,6 @@ exports.getUserAttribute = async (req, res) => {
   }
 };
 
-
 exports.createUser = async (req, res) => {
   try {
     const user = new User(req.body);
@@ -41,4 +45,3 @@ exports.createUser = async (req, res) => {
     errors.json(res, errors.code.USER_NOT_CREATED);
   }
 };
-

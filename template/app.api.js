@@ -20,7 +20,7 @@ app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
 
-app.use(ROUTES.API.INDEX, api_routes);
+app.use(ROUTES.API_BASE, api_routes);
 
 // Error Handling Middleware
 app.use(errorHandler.e404);

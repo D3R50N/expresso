@@ -4,8 +4,8 @@ const ROUTES = require("../routes");
 
 const router = express.Router();
 
-router.post(ROUTES.API.AUTH.LOGIN, authController.login);
-router.post(ROUTES.API.AUTH.REGISTER, authController.register);
+router.post(ROUTES.AUTH_LOGIN, authController.login);
+router.post(ROUTES.AUTH_REGISTER, authController.register);
 
 
 module.exports = router;

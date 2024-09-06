@@ -13,7 +13,7 @@ function getRoutesInFolder(folder) {
     if (fs.lstatSync(filePath).isDirectory()) {
       getRoutesInFolder(filePath);
     } else if (file.includes(".js")) {
-      const route = require("./" + filePath.replace(".js", ""));
+      const route = require("../" + filePath.replace(".js", ""));
       list.push(
         ...expressListRoutes(route, {
           logger: (_) => {},

@@ -1,82 +1,102 @@
 exports.code = Object.freeze({
-  AUTH_TOKEN_MISSSING: {
-    message: "Auth token is missing",
+  AUTH_TOKEN_MISSING: {
+    message: "Le jeton d'authentification est manquant",
     status: 401,
     code: "AUTH_TOKEN_MISSING",
   },
   AUTH_TOKEN_INVALID: {
-    message: "Auth token is invalid",
+    message: "Le jeton d'authentification est invalide",
     status: 401,
     code: "AUTH_TOKEN_INVALID",
   },
   EMAIL_REQUIRED: {
-    message: "Email required",
+    message: "Email requis",
     status: 401,
     code: "EMAIL_REQUIRED",
   },
+  INVALID_EMAIL: {
+    message: "Email invalide",
+    status: 401,
+    code: "INVALID_EMAIL",
+
+  },
+  FIELD_REQUIRED: {
+    message: "Un ou plusieurs champs requis manquant(s)",
+    status: 401,
+    code: "FIELD_REQUIRED",
+  },
   PASSWORD_REQUIRED: {
-    message: "Password required",
+    message: "Mot de passe requis",
     status: 401,
     code: "PASSWORD_REQUIRED",
   },
+  PASSWORD_LENGTH: {
+    message: "Le mot de passe doit contenir au moins 6 caractères",
+    status: 401,
+    code: "PASSWORD_LENGTH",
+  },
   USER_NOT_EXIST: {
-    message: "This user doesn't exist",
+    message: "Cet utilisateur n'existe pas",
     status: 401,
     code: "USER_NOT_EXIST",
   },
   USER_ATTR_NOT_FOUND: {
-    message: "Attribute not found",
+    message: "Attribut non trouvé",
     status: 404,
     code: "USER_ATTR_NOT_FOUND",
   },
   PASSWORD_INCORRECT: {
-    message: "Password is incorrect",
+    message: "Le mot de passe est incorrect",
     status: 401,
     code: "PASSWORD_INCORRECT",
   },
-  SERVER_ERROR: { message: "Server error", status: 500, code: "SERVER_ERROR" },
+  SERVER_ERROR: {
+    message: "Erreur serveur",
+    status: 500,
+    code: "SERVER_ERROR"
+  },
   USER_EXISTS: {
-    message: "User already exists",
+    message: "L'utilisateur existe déjà",
     status: 400,
     code: "USER_EXISTS",
   },
   INVALID_REQUEST: {
-    message: "Invalid request",
+    message: "Requête invalide",
     status: 400,
     code: "INVALID_REQUEST",
   },
   USER_NOT_CREATED: {
-    message: "User not created",
+    message: "Utilisateur non créé",
     status: 400,
     code: "USER_NOT_CREATED",
   },
   USER_NOT_FOUND: {
-    message: "User not found",
+    message: "Utilisateur non trouvé",
     status: 404,
     code: "USER_NOT_FOUND",
   },
   USER_NOT_UPDATED: {
-    message: "User not updated",
+    message: "Utilisateur non mis à jour",
     status: 400,
     code: "USER_NOT_UPDATED",
   },
   USER_NOT_DELETED: {
-    message: "User not deleted",
+    message: "Utilisateur non supprimé",
     status: 400,
     code: "USER_NOT_DELETED",
   },
   USER_NOT_AUTHORIZED: {
-    message: "User not authorized",
+    message: "Utilisateur non autorisé",
     status: 401,
     code: "USER_NOT_AUTHORIZED",
   },
   USER_NOT_AUTHENTICATED: {
-    message: "User not authenticated",
+    message: "Utilisateur non authentifié",
     status: 401,
     code: "USER_NOT_AUTHENTICATED",
   },
   RESOURCE_NOT_FOUND: {
-    message: "Resource not found",
+    message: "Ressource non trouvée",
     status: 404,
     code: "RESOURCE_NOT_FOUND",
   },

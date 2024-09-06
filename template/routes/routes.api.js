@@ -1,21 +1,15 @@
 const ROUTES = {
   DOCS: "/api-docs",
-  API: {
-    INDEX: "/api",
-    USERS: {
-      INDEX: "/users",
-      FIND: "/:id",
-      GET: {
-        INDEX: "/:id/get",
-        ATTRIBUTE: "/:id/get/:attr",
-      },
-    },
-    AUTH: {
-      INDEX: "/auth",
-      LOGIN: "/login",
-      REGISTER: "/register",
-    },
-  },
+
+  API_BASE: "/api",
+  USERS: "/users",
+  FIND: "/:id",
+  GET: "/:id/get", // can be used as FIND
+  GET_ATTRIBUTE: "/:id/get/:attr",
+
+  AUTH: "/auth",
+  AUTH_LOGIN: "/login",
+  AUTH_REGISTER: "/register",
 };
 
 module.exports = ROUTES;

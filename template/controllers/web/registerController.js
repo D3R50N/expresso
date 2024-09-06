@@ -27,14 +27,39 @@ exports.post = async (req, res) => {
     }
 
     const user = new User(req.body);
+
+
+    if (!isEmail(user.email))
+      return res.render("register", {
+        error: errors.code.INVALID_EMAIL,
+        body: req.body,
+      });
+
+    user.password = user.password?.trim();
+    user.name = user.name?.trim();
+
+    if (user.password.length < 6)
+      return res.render("register", {
+        error: errors.code.PASSWORD_LENGTH,
+        body: req.body,
+      });
+    
     await user.save();
+
     const token = generateToken(user);
 
     setCookie(res, "_tk", token);
 
-    const redirect = req.query.redirect || ROUTES.WEB.INDEX;
+    const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);
   } catch (err) {
+    if (err.message.includes("is required")) {
+      return res.render("register", {
+        error: errors.code.FIELD_REQUIRED,
+        body: req.body,
+      });
+    }
+    
     if (err.code === 11000)
       return res.render("register", {
         error: errors.code.USER_EXISTS,

@@ -1,11 +1,15 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
     unique: true,
+  },
+  name: {
+    type: String,
+    required: true,
   },
   image: {
     type: String,

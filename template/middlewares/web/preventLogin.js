@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
   }
   try {
     jwt.verify(token, config.jwtSecret);
-    return res.redirect(ROUTES.WEB.INDEX);
+    return res.redirect(ROUTES.BASE);
   } catch (err) {
       return next();
   }

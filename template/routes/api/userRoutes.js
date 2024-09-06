@@ -4,12 +4,12 @@ const ROUTES = require("../routes");
 
 const router = express.Router();
 
-router.get("/", userController.getAllUsers);
-router.get(ROUTES.API.USERS.FIND, userController.getUserById);
-router.get(ROUTES.API.USERS.GET.INDEX, userController.getUserById);
-router.get(ROUTES.API.USERS.GET.ATTRIBUTE, userController.getUserAttribute);
+router.get(ROUTES.BASE, userController.getAllUsers);
+router.get(ROUTES.FIND, userController.getUserById);
+router.get(ROUTES.GET, userController.getUserById);
+router.get(ROUTES.GET_ATTRIBUTE, userController.getUserAttribute);
 
-router.post(ROUTES.API.USERS.INDEX, userController.createUser);
+router.post(ROUTES.BASE, userController.createUser);
 
 
 module.exports = router;

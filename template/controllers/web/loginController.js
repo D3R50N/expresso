@@ -62,7 +62,7 @@ exports.post = async (req, res) => {
 
     setCookie(res, "_tk", token);
 
-    const redirect = req.query.redirect || ROUTES.WEB.INDEX;
+    const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);
   } catch (err) {
     console.log(err.message);
