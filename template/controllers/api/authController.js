@@ -1,8 +1,6 @@
-const jwt = require("jsonwebtoken");
 const User = require("../../models/userModel");
-const config = require("../../config/config");
 const errors = require("../../core/errors");
-const { generateToken } = require("../../services/authService");
+const AuthService = require("../../services/auth");
 
 exports.login = async (req, res) => {
   try {
@@ -25,7 +23,7 @@ exports.login = async (req, res) => {
     if (!(await user.comparePassword(password))) {
       return errors.json(res, errors.code.PASSWORD_INCORRECT);
     }
-    const token = generateToken(user);
+    const token = AuthService.generateToken(user);
     res.json({ token });
   } catch (err) {
     res

@@ -1,3 +1,22 @@
+:root {
+  --main-color: rgb(6, 6, 62);
+}
+body {
+  /* background-color: #16161d; */
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* color: white; */
+  gap: 2em;
+}
+
 #name {
   color: var(--main-color);
   font-weight: bold;
@@ -22,16 +41,16 @@ img {
   margin: 0 auto;
   border-radius: 50%;
   width: 200px;
-  height: 200px;
+  aspect-ratio: 1;
   object-fit: cover;
-  background-color: #fff1;
+  background-color: #0001;
   text-align: center;
   line-height: 200px;
 }
 
 #btn_logout {
   color: var(--main-color);
-  background-color  : #fff1;
+  background-color: #fff1;
   border: 1px solid var(--main-color);
   padding: 10px 20px;
   border-radius: 5px;
@@ -40,3 +59,52 @@ img {
   bottom: 20px;
   right: 20px;
 }
+
+.content {
+  width: 100%;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+nav {
+  display: flex;
+  gap: 1em;
+  padding: 1em;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #16161D;
+  color: white;
+  font-family: "Nunito";
+
+  a {
+    font-weight: bold;
+    padding: 0.6em 1em;
+    border-radius: 10em;
+    transition-duration: 0.2s;
+    color: white;
+
+    &:hover{
+      color: #fffa;
+    }
+
+    &.active {
+      color: black;
+      background-color: white;
+    }
+  }
+
+  img{
+    height:  50px;
+    width: 50px;
+  }
+  
+}
+
+.f1 {
+    flex: 1;
+  }

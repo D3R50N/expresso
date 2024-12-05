@@ -1,7 +1,10 @@
 const ROUTES = {
+  API_BASE: "/api",
+
+  STORAGE_GET_FILE: "/storage/files/:filename",
+
   DOCS: "/api-docs",
 
-  API_BASE: "/api",
   USERS: "/users",
   FIND: "/:id",
   GET: "/:id/get", // can be used as FIND

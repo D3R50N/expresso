@@ -1,10 +1,11 @@
 const config = require("../../config/config");
 const ROUTES = require("../../routes/routes");
 const jwt = require("jsonwebtoken");
-const { getCookie } = require("../../utils/cookies");
+const CookieService = require("../../services/cookies");
+const AppService = require("../../services");
 
 module.exports = (req, res, next) => {
-  const token = getCookie(req, "_tk");
+  const token = CookieService.from(req, res).get(AppService.config.authToken);
   if (!token) {
     return next();
   }

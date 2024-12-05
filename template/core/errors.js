@@ -30,6 +30,11 @@ exports.code = Object.freeze({
     status: 401,
     code: "PASSWORD_REQUIRED",
   },
+  PASSWORD_NOT_SAME: {
+    message: "Mots de passe non identiques",
+    status: 401,
+    code: "PASSWORD_NOT_SAME",
+  },
   PASSWORD_LENGTH: {
     message: "Le mot de passe doit contenir au moins 6 caractères",
     status: 401,

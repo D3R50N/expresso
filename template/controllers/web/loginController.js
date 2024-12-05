@@ -4,14 +4,15 @@ const config = require("../../config/config");
 const errors = require("../../core/errors");
 const ROUTES = require("../../routes/routes");
 const { e500, e400 } = require("../../middlewares/errorHandler");
-const { clearCookie, getCookie, setCookie } = require("../../utils/cookies");
-const { generateToken } = require("../../services/authService");
+const CookieService = require("../../services/cookies");
+const AuthService = require("../../services/auth");
+const AppService = require("../../services");
 
 exports.index = async (req, res) => {
   try {
-    var expiredCode = getCookie(req, "_exp") || 0;
+    var expiredCode = CookieService.from(req, res).get("_exp") || 0;
     if (expiredCode == 1) {
-      clearCookie(res, "_exp");
+      CookieService.from(req, res).clear("_exp");
 
       return res.render("login", {
         error: {
@@ -58,9 +59,9 @@ exports.post = async (req, res) => {
         error: errors.code.PASSWORD_INCORRECT,
       });
     }
-    const token = generateToken(user);
+    const token = AuthService.generateToken(user);
 
-    setCookie(res, "_tk", token);
+    CookieService.from(req, res).set(AppService.config.authToken, token);
 
     const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);

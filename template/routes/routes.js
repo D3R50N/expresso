@@ -7,6 +7,10 @@ const ROUTES = {
   LOGOUT_EXPIRED: "/logout?_exp=1",
   REGISTER: "/register",
 
+  STORAGE_GET_FILE: "/storage/files/:filename",
+
+  CLIENT_ROUTER:"/client-router",
+
   PROFILE: "/profile",
   FORM_CONTACT: "/form-contact",
 

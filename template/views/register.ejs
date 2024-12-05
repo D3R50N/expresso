@@ -1,36 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>[##NAME##] - Sign Up</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <link rel="stylesheet" href="/css/login.css">
-    <link rel="stylesheet" href="/css/register.css">
-</head>
 
-<body>
-    <div id="container">
-        <h1>Sign Up</h1>
-        <pre>[##NAME##] - by Expresso</pre>
-        <form action="/register" method="POST">
-            <input type="text" required name="email" placeholder="Your email address" value="<%= locals.body?.email %>">
-            <input type="password" required name="password" placeholder="Your password">
-            <label for="image" id="img_label">Choose a profile picture</label>
-            <input type="file" name="image" id="image" accept=".png;.jpg;.jpeg">
-            <input type="hidden" name="image_base64" id="image_base64">
-            <div class="btns">
-                <input type="submit" value="Continue">
-                <span>or</span>
-                <a href="/login" class="btn"><input type="button" value="Log in into your account"></a>
+    <link rel="stylesheet" href="/css/expresso.css" />
+    <link rel="stylesheet" href="/css/login.css" />
+    <link rel="stylesheet" href="/css/register.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div>
+        <div class="login-register-page">
+          <!-- Welcome Text -->
+          <div class="welcome-text">
+            <h1>SIGNUP</h1>
+            <h3>[##NAME##] - by Expresso</h3>
+            <span>Already have an account? <a href="/login">Log In!</a></span>
+          </div>
+
+          <!-- Form -->
+          <form action="/register" method="post" id="register-form" enctype="multipart/form-data">
+            <div class="input-with-icon-left">
+              <i class="icon-line-awesome-user"></i>
+              <input
+                type="text"
+                class="input-text with-border"
+                name="name"
+                id="name"
+                placeholder="Fullname"
+                required
+                value="<%= locals.body?.name %>"
+              />
             </div>
-        </form>
+             <div class="input-with-icon-left">
+              <i class="icon-material-baseline-mail-outline"></i>
+              <input
+                type="text"
+                class="input-text with-border"
+                name="email"
+                id="email"
+                placeholder="Email Address"
+                required
+                value="<%= locals.body?.email %>"
+              />
+            </div>
+
+            <div
+              class="input-with-icon-left"
+              title="Should be at least 8 characters long"
+              data-tippy-placement="bottom"
+            >
+              <i class="icon-material-outline-lock"></i>
+              <input
+                type="password"
+                class="input-text with-border"
+                name="password"
+                id="password"
+                placeholder="Password"
+                required
+              />
+            </div>
+
+            <div class="input-with-icon-left">
+              <i class="icon-material-outline-lock"></i>
+              <input
+                type="password"
+                class="input-text with-border"
+                name="password-repeat"
+                id="password-repeat"
+                placeholder="Repeat Password"
+                required
+              />
+            </div>
+
+            <label for="image" id="img_label">Choose a profile picture</label>
+            <input type="file" name="image" id="image" accept="image/*" />
+          </form>
+
+          <!-- Button -->
+          <button
+            class="button full-width button-sliding-icon ripple-effect margin-top-10"
+            type="submit"
+            form="register-form"
+          >
+            Register <i class="icon-material-outline-arrow-right-alt"></i>
+          </button>
+
+          <!-- Social Login -->
+          <div class="social-login-separator"><span>or</span></div>
+          <div class="social-login-buttons">
+            <button class="facebook-login ripple-effect">
+              <i class="icon-brand-facebook-f"></i> Register via Facebook
+            </button>
+            <button class="google-login ripple-effect">
+              <i class="icon-brand-google-plus-g"></i> Register via Google+
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
     <% if (locals.error) { %>
     <div id="error"><%= error.message %></div>
     <% } %>
     <script src="/js/register.js"></script>
-</body>
-
+  </body>
 </html>

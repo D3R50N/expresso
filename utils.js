@@ -11,8 +11,7 @@ const notApiPaths = [
   "middlewares/web",
   "routes/web",
   "views",
-  "public/css",
-  "public/js",
+  "public",
   "middlewares/errorHandler.js",
   "app.js",
   "routes/routes.js",
@@ -140,7 +139,7 @@ async function createProject(projectName) {
       type: "number",
       name: "port",
       message: "Enter port number for the server:",
-      default: 3000,
+      default: parseInt(Math.random()*50000+3000),
     },
     {
       type: "confirm",
@@ -164,6 +163,7 @@ async function createProject(projectName) {
         type: "input",
         name: "DBNAME",
         message: "Enter database name:",
+        default:NAME.toLowerCase()+"_db",
         validate: function (input) {
           if (input.trim() == "") {
             return "Database name cannot be empty";

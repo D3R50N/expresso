@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  stripeId: {
+    type: String,
+  },
 });
 
 userSchema.pre("save", async function (next) {

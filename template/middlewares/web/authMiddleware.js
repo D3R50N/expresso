@@ -1,12 +1,13 @@
 const config = require("../../config/config");
 const ROUTES = require("../../routes/routes");
 const jwt = require("jsonwebtoken");
-const { getCookie, setCookie, clearCookie } = require("../../utils/cookies");
 const User = require("../../models/userModel");
 const { code } = require("../../core/errors");
+const CookieService = require("../../services/cookies");
+const AppService = require("../../services");
 
 module.exports = async (req, res, next) => {
-  const token = getCookie(req, "_tk");
+  const token = CookieService.from(req, res).get(AppService.config.authToken);
   if (!token) {
     return res.redirect(ROUTES.LOGIN);
   }

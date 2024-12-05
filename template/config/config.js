@@ -41,6 +41,17 @@ module.exports = {
   jwtMaxDate: process.env.JWT_MAX_DATE || "30d",
   cookieMaxDate: process.env.COOKIE_MAX_DATE || "30d",
 
+  authToken: process.env.AUTH_TOKEN || "_tk",
+
+
+  stripePublishableKey: process.env.STRIPE_PK,
+  stripeSecretKey: process.env.STRIPE_SK,
+
+  mailerUser: process.env.MAILER_USER,
+  mailerPwd: process.env.MAILER_PWD,
+  mailerAppName: process.env.MAILER_APPNAME,
+  mailerReceivers: (process.env.MAILER_RECEIVERS ?? "").split(","),
+
   isDev: ["dev", "development", "develop", "test"].includes(environment),
   isProd: ["prod", "production", "release", "released"].includes(environment),
 };

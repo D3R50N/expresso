@@ -4,8 +4,11 @@ const config = require("../../config/config");
 const errors = require("../../core/errors");
 const ROUTES = require("../../routes/routes");
 const { e400 } = require("../../middlewares/errorHandler");
-const { setCookie } = require("../../utils/cookies");
-const { generateToken } = require("../../services/authService");
+const AuthService = require("../../services/auth");
+const MailService = require("../../services/mail");
+const CookieService = require("../../services/cookies");
+const UploadService = require("../../services/upload");
+const AppService = require("../../services");
 
 exports.index = async (req, res) => {
   try {
@@ -19,47 +22,64 @@ exports.index = async (req, res) => {
 
 exports.post = async (req, res) => {
   try {
-    
-    // Store base64 image in image field
-    if (req.body.image_base64) {
-      req.body.image = req.body.image_base64;
-      delete req.body.image_base64;
-    }
 
     const user = new User(req.body);
 
 
-    if (!isEmail(user.email))
+    if (!MailService.isEmail(user.email)) {
+      UploadService.deleteUploadedFiles(req.files);
       return res.render("register", {
         error: errors.code.INVALID_EMAIL,
         body: req.body,
       });
+    }
+
+    if (req.files[0])
+      user.image = UploadService.getRoutePath(req.files[0].filename);
+
 
     user.password = user.password?.trim();
     user.name = user.name?.trim();
 
-    if (user.password.length < 6)
+    if (user.password.length < 6) {
+      UploadService.deleteUploadedFiles(req.files);
+
+
       return res.render("register", {
         error: errors.code.PASSWORD_LENGTH,
         body: req.body,
       });
-    
+
+    }
+
+    if (user.password != req.body['password-repeat']) {
+      UploadService.deleteUploadedFiles(req.files);
+      return res.render("register", {
+        error: errors.code.PASSWORD_NOT_SAME,
+        body: req.body,
+      });
+
+    }
     await user.save();
 
-    const token = generateToken(user);
+    const token = AuthService.generateToken(user);
 
-    setCookie(res, "_tk", token);
+    CookieService.from(req, res).set(AppService.config.authToken, token);
 
     const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);
   } catch (err) {
+
+    // console.log(err);
+    UploadService.deleteUploadedFiles(req.files);
+
     if (err.message.includes("is required")) {
       return res.render("register", {
         error: errors.code.FIELD_REQUIRED,
         body: req.body,
       });
     }
-    
+
     if (err.code === 11000)
       return res.render("register", {
         error: errors.code.USER_EXISTS,

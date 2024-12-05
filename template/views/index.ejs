@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Expresso - [##NAME##]</title>
-     <link rel="stylesheet" href="/css/main.css">
-     <link rel="stylesheet" href="/css/home.css">
-</head>
+    <link rel="stylesheet" href="/css/expresso.css" />
+    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" href="/lib/expresso-client-router/style.css" />
+  </head>
 
-<body>
-    
-    <img src="<%=image %>" alt=" ">
-    <%- include("components/welcome.ejs") %>
-    <p>Set the "name" query in url to change 😉</p>
-    <code>?name=YOUR NAME</code>
+  <body>
+    <nav>
+      <span class="f1">[##NAME##] - <%=locals.name%></span>
+      <a href="/" route router-nav="">Home</a
+      ><a href="/about" route router-nav="">About</a
+      ><a href="/faq" route router-nav="">FAQ</a>
+      <img src="<%=locals.user?.image %>" route="/"/>
+
+    </nav>
+    <div class="content" router-app>
+     
+    </div>
+
     <a href="/logout" id="btn_logout">LOGOUT ↪</a>
 
-</body>
-
+    <script src="/lib/expresso-client-router/index.js"></script>
+  </body>
 </html>

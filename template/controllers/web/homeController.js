@@ -1,12 +1,10 @@
 const { e400 } = require("../../middlewares/errorHandler");
-const User = require("../../models/userModel");
 
 exports.index = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    const user = await AuthService.authUser(req);
     const name = req.query.name || user.email;
-    const image = user.image;
-    return res.render("index", { name: name, image: image });
+    return res.render("index", { name: name, user });
   } catch (err) {
     console.log(err.message);
     req.error = err;
