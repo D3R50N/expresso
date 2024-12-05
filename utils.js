@@ -54,7 +54,13 @@ function toLitt(str = "", capitalize = false) {
 }
 
 async function setVarsInFile(filePath, vars = {}) {
-  if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) return;
+  var hasTargetExt = () => {
+    for (let ext of [".js", ".html", ".json", ".env", ".md", ".ejs"]) if (filePath.endsWith(ext)) return true;
+    return false;
+  }
+
+
+  if (!hasTargetExt() || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) return;
 
   let content = await fs.readFile(filePath, "utf-8");
   for (let varName in vars) {
@@ -139,13 +145,13 @@ async function createProject(projectName) {
       type: "number",
       name: "port",
       message: "Enter port number for the server:",
-      default: parseInt(Math.random()*50000+3000),
+      default: parseInt(Math.random() * 50000 + 3000),
     },
     {
       type: "confirm",
       name: "setup_db",
       message: "Do you want to configure database? :",
-      default: false,
+      default: true,
     },
   ]);
 
@@ -163,7 +169,7 @@ async function createProject(projectName) {
         type: "input",
         name: "DBNAME",
         message: "Enter database name:",
-        default:NAME.toLowerCase()+"_db",
+        default: NAME.toLowerCase() + "_db",
         validate: function (input) {
           if (input.trim() == "") {
             return "Database name cannot be empty";

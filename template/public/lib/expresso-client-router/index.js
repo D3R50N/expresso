@@ -34,13 +34,13 @@ async function navigateTo(url,target) {
 }
 
 async function renderRoute(target) {
-    if (window.location.pathname == currentPathName) return;
-    currentPathName = window.location.pathname
+    if (window.location.pathname + window.location.search == currentPathName) return;
+    currentPathName = window.location.pathname;
 
     const appDiv = target ?? document.querySelector('[router-app]');
     if (!appDiv) return;
     const appBase = appDiv.getAttribute("router-base") ?? "";
-    const route = window.location.pathname.replaceAll(appBase, "").replaceAll("//", "");
+    const route = window.location.pathname.replaceAll(appBase, "").replaceAll("//", "") + window.location.search;
 
     document.querySelectorAll("[router-nav]").forEach(n => n.classList.remove("active"));
     document.querySelectorAll("[router-nav]").forEach(n => {
@@ -48,6 +48,8 @@ async function renderRoute(target) {
         if (link) {
             let isActive = false;
             let basePaths = [appBase + "/", appBase]
+           
+            link = link.split("?")[0];
             if (link === "/") isActive = currentPathName == "/";
             else if (basePaths.includes(link)) isActive = basePaths.includes(currentPathName);
             else isActive = currentPathName.startsWith(link);
@@ -57,6 +59,8 @@ async function renderRoute(target) {
             }
         }
     });
+
+    currentPathName += window.location.search;
 
     appDiv.innerHTML = loadingView()
 

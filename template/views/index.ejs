@@ -9,11 +9,11 @@
 
   <body>
     <nav>
-      <span class="f1">[##NAME##] - <%=locals.name%></span>
+      <span class="f1">[##NAME##] - <%=locals.user?.email%></span>
       <a href="/" route router-nav="">Home</a
       ><a href="/about" route router-nav="">About</a
       ><a href="/faq" route router-nav="">FAQ</a>
-      <img src="<%=locals.user?.image %>" route="/"/>
+      <img src="<%=locals.user?.image %>" route="/?name=<%=locals.name%>"/>
 
     </nav>
     <div class="content" router-app>

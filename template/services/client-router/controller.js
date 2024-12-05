@@ -4,8 +4,9 @@ const AuthService = require("../auth");
 exports.index = async (req, res) => {
     try {
         const user = await AuthService.authUser(req);
+        const name = req.query.name || user.name;
         const data = {
-            user,
+            user, name
         };
 
         res.send(await ClientRouterService.renderView("home",res,data))
