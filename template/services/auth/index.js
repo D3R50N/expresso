@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const AppService = require("..");
 const User = require("../../models/userModel");
 
-// const { getDateInfo, strDate, dateFromStamp } = require("./date");
 const CookieService = require("../cookies");
 const PaymentService = require("../payment");
 
@@ -29,7 +28,10 @@ class AuthService {
             const user = await User.findById(req.user.userId);
             if (!user) return null;
 
-            if (!withStripe) return { model: user, ...user._doc, }
+
+            const attributes = { ...user._doc, };
+
+            if (!withStripe) return { model: user, ...attributes, }
 
 
             var stripeId = user.stripeId ?? (await PaymentService.createStripeCustomer(user)).id;
@@ -37,8 +39,9 @@ class AuthService {
                 customer: stripeId
             })).data;
 
+            attributes.subscriptions = [];
+            attributes.hasActiveSubscriptions = false;
 
-            const attributes = { subscriptions: [], hasActiveSubscriptions: false, ...user._doc, };
 
             const actives = subscriptions.filter(sub => sub.status === "active");
             for (const sub of actives) {

@@ -37,7 +37,7 @@
         border: 3px solid #14256A;
         border-radius: 50%;
         aspect-ratio: 1;
-        width: 1em;
+        width: 15dvw;
         border-top-color: transparent;
         animation: load 1s infinite;
     }

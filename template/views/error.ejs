@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Error <%= title %></title>
-   <link rel="stylesheet" href="/css/expresso.css">
-   <link rel="stylesheet" href="/css/error.css">
-</head>
+    <link rel="stylesheet" href="/css/expresso.css" />
+    <link rel="stylesheet" href="/css/error.css" />
+  </head>
 
-<body>
-    <div id="title"><%= title %></div>
-    <div id="message"><% if (locals.devMode) { %>
-     <code>DEV MODE</code>
-    <% } %> 
+  <body>
+    <div class="error">
+      <div id="title"><%= title %></div>
+      <div id="message">
+        <% if (locals.devMode) { %>
+
+        <code>DEV MODE</code>
+        <% } %>
         <span><%= message %></span>
-    </div>
-</body>
+      </div>
+        <a href="#" class="btn">Retour à la page précédente</a>
 
+    </div>
+
+    <script>
+      document.querySelector(".btn").addEventListener("click", (_) => {
+        history.back();
+      });
+    </script>
+  </body>
 </html>

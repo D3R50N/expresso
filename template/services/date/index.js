@@ -1,7 +1,7 @@
 class DateService {
     static #DEFAULT_LANG = "fr";
 
-    static #lang = DEFAULT_LANG;
+    static #lang = this.#DEFAULT_LANG;
 
 
     static setLang = (str = this.#lang) => this.#lang = str;
