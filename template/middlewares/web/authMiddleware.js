@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
     return res.redirect(ROUTES.LOGIN);
   }
   try {
-    const decoded = jwt.verify(token, config.jwtSecret);
+    const decoded = jwt.verify(token, AppService.config.jwtSecret);
     req.headers.authorization = token;
     req.user = decoded;
     const user = await User.findById(req.user.userId);

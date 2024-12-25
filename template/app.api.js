@@ -11,7 +11,6 @@ const ROUTES = require("./routes/routes");
 const cors = require('cors');
 
 const UploadService = require("./services/upload");
-const ClientRouterService = require("./services/client-router");
 
 
 const app = express();
@@ -24,7 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
 // Routes
 
-ClientRouterService.init(app);
 
 app.use(UploadService.router("/storage/files/:filename"));
 app.use(ROUTES.API_BASE, api_routes);

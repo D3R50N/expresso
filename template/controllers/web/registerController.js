@@ -1,7 +1,4 @@
-const jwt = require("jsonwebtoken");
 const User = require("../../models/userModel");
-const config = require("../../config/config");
-const errors = require("../../core/errors");
 const ROUTES = require("../../routes/routes");
 const { e400 } = require("../../middlewares/errorHandler");
 const AuthService = require("../../services/auth");
@@ -9,6 +6,7 @@ const MailService = require("../../services/mail");
 const CookieService = require("../../services/cookies");
 const UploadService = require("../../services/upload");
 const AppService = require("../../services");
+const CoreError = require("../../core/errors");
 
 exports.index = async (req, res) => {
   try {
@@ -21,28 +19,29 @@ exports.index = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
+    const errors = CoreError.from(req, res);
   try {
 
     const user = new User(req.body);
 
 
     if (!MailService.isEmail(user.email)) {
-      UploadService.deleteUploadedFiles(req.files);
+      UploadService.deleteUploadedFiles([req.file]);
       return res.render("register", {
         error: errors.code.INVALID_EMAIL,
         body: req.body,
       });
     }
 
-    if (req.files[0])
-      user.image = UploadService.getRoutePath(req.files[0].filename);
+    if (req.file)
+      user.image = UploadService.getRoutePath(req.file.filename);
 
 
     user.password = user.password?.trim();
     user.name = user.name?.trim();
 
     if (user.password.length < 6) {
-      UploadService.deleteUploadedFiles(req.files);
+      UploadService.deleteUploadedFiles([req.file]);
 
 
       return res.render("register", {
@@ -53,7 +52,7 @@ exports.post = async (req, res) => {
     }
 
     if (user.password != req.body['password-repeat']) {
-      UploadService.deleteUploadedFiles(req.files);
+      UploadService.deleteUploadedFiles([req.file]);
       return res.render("register", {
         error: errors.code.PASSWORD_NOT_SAME,
         body: req.body,
@@ -71,7 +70,7 @@ exports.post = async (req, res) => {
   } catch (err) {
 
     // console.log(err);
-    UploadService.deleteUploadedFiles(req.files);
+    UploadService.deleteUploadedFiles([req.file]);
 
     if (err.message.includes("is required")) {
       return res.render("register", {

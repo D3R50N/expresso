@@ -18,7 +18,6 @@ exports.code = Object.freeze({
     message: "Email invalide",
     status: 401,
     code: "INVALID_EMAIL",
-
   },
   FIELD_REQUIRED: {
     message: "Un ou plusieurs champs requis manquant(s)",
@@ -58,7 +57,7 @@ exports.code = Object.freeze({
   SERVER_ERROR: {
     message: "Erreur serveur",
     status: 500,
-    code: "SERVER_ERROR"
+    code: "SERVER_ERROR",
   },
   USER_EXISTS: {
     message: "L'utilisateur existe déjà",
@@ -66,7 +65,7 @@ exports.code = Object.freeze({
     code: "USER_EXISTS",
   },
   INVALID_REQUEST: {
-    message: "Requête invalide",
+    message: "Requête invalide. Réessayez..",
     status: 400,
     code: "INVALID_REQUEST",
   },
@@ -105,8 +104,16 @@ exports.code = Object.freeze({
     status: 404,
     code: "RESOURCE_NOT_FOUND",
   },
+  PAGE_NOT_FOUND: {
+    message: "Page introuvable",
+    status: 404,
+    code: "PAGE_NOT_FOUND",
+  },
+  SESSION_EXPIRED: {
+    message: "Votre session a expiré.",
+    status: 440,
+    code: "SESSION_EXPIRED",
+  },
 });
 
-exports.json = function (res, code = exports.code.SERVER_ERROR) {
-  return res.status(code.status).json(code);
-};
+

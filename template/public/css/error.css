@@ -43,11 +43,12 @@ body {
 }
 
 a.btn{
-    background-color: black;
-    color: white;
+    background-color: black !important;
+    color: white !important;
     padding: 1em;
     border-radius: .4em;
     margin-top: 5em;
+    cursor: pointer;
 }
 
 a.btn::before{

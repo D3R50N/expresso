@@ -1,4 +1,4 @@
 {
-  "watch": [".env", "*.ejs", "*.js"],
-  "ext": "js,ejs,html"
+  "watch": [".env", "*.ejs", "*.js","translations"],
+  "ext": "js,ejs,html,json"
 }

@@ -16,7 +16,7 @@ class UploadService {
 
     static #routePath = ROUTES.STORAGE_GET_FILE;
     static getRoutePath(filename) {
-        return this.#routePath.split(":")[0]+filename;
+        return this.#routePath.split(":")[0] + filename;
     }
 
 
@@ -81,6 +81,10 @@ class UploadService {
 
     static middleware = multer({ storage: this.#storage });
 
+    static deleteFileByName(filename) {
+        if (!filename) return;
+        this.deleteUploadedFiles([this.file(filename)]);
+    }
     static deleteUploadedFiles(files) {
         files.forEach(file => {
             fs.unlink(file.path, (err) => {
@@ -88,13 +92,24 @@ class UploadService {
             });
         });
     }
+    static file(filename) {
+        const p = path.join(__dirname, "../../", UploadService.#fileFolder({
+            originalname: filename,
+        }), filename);
+
+        return {
+            filename,
+            folder: UploadService.#fileFolder({
+                originalname: filename,
+            }),
+            path: p,
+        }
+    }
 
     static getFile(req, res, next) {
         const filename = req.params.filename;
         if (!filename) return res.sendStatus(400);
-        const p = path.join(__dirname,"../../", UploadService.#fileFolder({
-            originalname: filename,
-        }), filename);
+        const p = UploadService.file(filename).path;
 
         if (!fs.existsSync(p)) return res.sendStatus(404)
         return res.sendFile(p);
@@ -106,7 +121,7 @@ class UploadService {
         const r = require("express").Router();
 
         r.get(this.#routePath, UploadService.getFile);
-        
+
         return r;
     }
 }

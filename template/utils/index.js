@@ -4,7 +4,6 @@ class Utils {
       setTimeout(res, ms);
     })
   }
-
 }
 
 module.exports = Utils;

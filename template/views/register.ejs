@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>[##NAME##] - Sign Up</title>
+    <title>[##NAME##] - <%= tr.register_t?.toUpperCase() %></title>
 
     <link rel="stylesheet" href="/css/expresso.css" />
     <link rel="stylesheet" href="/css/login.css" />
@@ -16,9 +16,9 @@
         <div class="login-register-page">
           <!-- Welcome Text -->
           <div class="welcome-text">
-            <h1>SIGNUP</h1>
-            <h3>[##NAME##] - by Expresso</h3>
-            <span>Already have an account? <a href="/login">Log In!</a></span>
+            <h1><%= tr.register_t?.toUpperCase() %></h1>
+            <h3>[##NAME##] <%= tr.by %> Expresso</h3>
+            <span> <%= tr.already_have_account %> <a href="/login"><%= tr.login %></a></span>
           </div>
 
           <!-- Form -->
@@ -30,7 +30,7 @@
                 class="input-text with-border"
                 name="name"
                 id="name"
-                placeholder="Fullname"
+                placeholder="<%= tr.fullname %>"
                 required
                 value="<%= locals.body?.name %>"
               />
@@ -42,7 +42,7 @@
                 class="input-text with-border"
                 name="email"
                 id="email"
-                placeholder="Email Address"
+                placeholder="<%= tr.email_address %>"
                 required
                 value="<%= locals.body?.email %>"
               />
@@ -59,7 +59,7 @@
                 class="input-text with-border"
                 name="password"
                 id="password"
-                placeholder="Password"
+                placeholder="<%= tr.password %>"
                 required
               />
             </div>
@@ -71,12 +71,12 @@
                 class="input-text with-border"
                 name="password-repeat"
                 id="password-repeat"
-                placeholder="Repeat Password"
+                placeholder="<%= tr.repeat_password %>"
                 required
               />
             </div>
 
-            <label for="image" id="img_label">Choose a profile picture</label>
+            <label for="image" id="img_label"><%= tr.choose_profile_picture %></label>
             <input type="file" name="image" id="image" accept="image/*" />
           </form>
 
@@ -86,17 +86,17 @@
             type="submit"
             form="register-form"
           >
-            Register <i class="icon-material-outline-arrow-right-alt"></i>
+            <%= tr.register %> <i class="icon-material-outline-arrow-right-alt"></i>
           </button>
 
           <!-- Social Login -->
-          <div class="social-login-separator"><span>or</span></div>
+          <div class="social-login-separator"><span><%= tr.or %></span></div>
           <div class="social-login-buttons">
             <button class="facebook-login ripple-effect">
-              <i class="icon-brand-facebook-f"></i> Register via Facebook
+              <i class="icon-brand-facebook-f"></i> <%= tr.register_facebook %>
             </button>
             <button class="google-login ripple-effect">
-              <i class="icon-brand-google-plus-g"></i> Register via Google+
+              <i class="icon-brand-google-plus-g"></i> <%= tr.register_google %>
             </button>
           </div>
         </div>

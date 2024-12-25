@@ -15,10 +15,11 @@ const [##MODEL_NAME##]Schema = new mongoose.Schema({
     default: Date.now,
   },
 
+} ,{
+  timestamps: true, // Ajoute createdAt et updatedAt
 });
 
 [##MODEL_NAME##]Schema.pre("save", function (next) {
-  this.updatedAt = Date.now();
   next();
 });
 

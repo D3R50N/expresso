@@ -1,4 +1,3 @@
-const config = require("../../config/config");
 const ROUTES = require("../../routes/routes");
 const jwt = require("jsonwebtoken");
 const CookieService = require("../../services/cookies");
@@ -10,7 +9,7 @@ module.exports = (req, res, next) => {
     return next();
   }
   try {
-    jwt.verify(token, config.jwtSecret);
+    jwt.verify(token, AppService.config.jwtSecret);
     return res.redirect(ROUTES.BASE);
   } catch (err) {
       return next();

@@ -13,6 +13,8 @@ const cors = require('cors');
 const path = require("path");
 const UploadService = require("./services/upload");
 const ClientRouterService = require("./services/client-router");
+const LangService = require("./services/lang");
+
 
 
 const app = express();
@@ -32,7 +34,7 @@ app.set("view engine", "ejs");
 
 
 // Routes
-
+LangService.init(app);
 ClientRouterService.init(app);
 
 app.use(UploadService.router());
@@ -46,7 +48,7 @@ app.use(errorHandler.e500);
 
 app.listen(config.port, () => {
   
-  console.clear();
+  // console.clear();
   
   if (config.setupDb && config.dbUri) require("./config/db");
   const address = config.isDev ? "http://localhost:" : "port ";

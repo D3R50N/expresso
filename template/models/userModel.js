@@ -21,6 +21,9 @@ const userSchema = new mongoose.Schema({
   stripeId: {
     type: String,
   },
+ 
+} ,{
+  timestamps: true, // Ajoute createdAt et updatedAt
 });
 
 userSchema.pre("save", async function (next) {

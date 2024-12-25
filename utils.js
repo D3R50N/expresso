@@ -55,12 +55,17 @@ function toLitt(str = "", capitalize = false) {
 
 async function setVarsInFile(filePath, vars = {}) {
   var hasTargetExt = () => {
-    for (let ext of [".js", ".html", ".json", ".env", ".md", ".ejs"]) if (filePath.endsWith(ext)) return true;
+    for (let ext of [".js", ".html", ".json", ".env", ".md", ".ejs"])
+      if (filePath.endsWith(ext)) return true;
     return false;
-  }
+  };
 
-
-  if (!hasTargetExt() || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) return;
+  if (
+    !hasTargetExt() ||
+    !fs.existsSync(filePath) ||
+    fs.statSync(filePath).isDirectory()
+  )
+    return;
 
   let content = await fs.readFile(filePath, "utf-8");
   for (let varName in vars) {
@@ -139,13 +144,18 @@ async function createProject(projectName) {
     );
     await setVarsInFile(path.join(projectPath, templateName), vars);
   }
-
+  var defaultPort = parseInt(Math.random() * 50000 + 3000);
+  defaultPort += Date.now()
+    .toString()
+    .split("")
+    .reduce((a, b) => parseInt(a) + parseInt(b));
+  
   var configure_db = await inquirer.prompt([
     {
       type: "number",
       name: "port",
       message: "Enter port number for the server:",
-      default: parseInt(Math.random() * 50000 + 3000),
+      default:defaultPort,
     },
     {
       type: "confirm",

@@ -1,12 +1,10 @@
-const jwt = require("jsonwebtoken");
 const User = require("../../models/userModel");
-const config = require("../../config/config");
-const errors = require("../../core/errors");
 const ROUTES = require("../../routes/routes");
 const { e500, e400 } = require("../../middlewares/errorHandler");
 const CookieService = require("../../services/cookies");
 const AuthService = require("../../services/auth");
 const AppService = require("../../services");
+const CoreError = require("../../core/errors");
 
 exports.index = async (req, res) => {
   try {
@@ -15,9 +13,7 @@ exports.index = async (req, res) => {
       CookieService.from(req, res).clear("_exp");
 
       return res.render("login", {
-        error: {
-          message: "Your session has expired.",
-        },
+        error: CoreError.from(req,res).code.SESSION_EXPIRED,
       });
     }
     return res.render("login");
@@ -29,6 +25,7 @@ exports.index = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
+  const errors = CoreError.from(req, res);
   try {
     const { email, password } = req.body;
 

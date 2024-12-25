@@ -20,8 +20,11 @@ router.get(ROUTES.LOGIN, preventLogin, loginController.index);
 router.get(ROUTES.LOGOUT, logoutController.index);
 router.get(ROUTES.REGISTER, preventLogin, registerController.index);
 
-
 router.post(ROUTES.LOGIN, loginController.post);
-router.post(ROUTES.REGISTER,UploadService.middleware.any(), registerController.post);
+router.post(
+  ROUTES.REGISTER,
+  UploadService.middleware.single("image"),
+  registerController.post
+);
 
 module.exports = router;
