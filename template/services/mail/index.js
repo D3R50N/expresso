@@ -26,7 +26,7 @@ class MailService {
             to: to.join(","),
             subject, text, html,
         }
-        await transporter.sendMail(options)
+        await this.transporter.sendMail(options)
     }
 
 
@@ -42,7 +42,7 @@ class MailService {
             content = content.replaceAll(new RegExp(`#{${key}}`,"ig"), template_var[key]);
         }
 
-        await sendMail({
+        await this.sendMail({
             to: receivers,
             subject,
             html: content,

@@ -7,10 +7,12 @@ const {
   generateJWT,
   generateController,
   generateModel,
+  generateView,
   getEnvKey,
   setEnvKey,
   deleteEnvKey,
   generate,
+  generateMVC,
 } = require("./utils");
 
 program
@@ -38,25 +40,40 @@ program
   .description("Delete a env key value")
   .action(deleteEnvKey);
 
-  program
-    .command("generate")
-    .description("Global generate command")
-    .action(generate);
+program
+  .command("generate")
+  .description("Global generate command")
+  .action(generate);
 
 program
   .command("generate:jwt")
   .description("Generate a JWT secret key")
   .action(generateJWT);
 
+  
+program
+  .command("generate:mvc <name>")
+  .description("Generate a Model-View-Controller")
+  .action(generateMVC);
+
 program
   .command("generate:controller <controller-name>")
   .description("Generate a controller")
   .action(generateController);
 
-  
 program
   .command("generate:model <model-name>")
   .description("Generate a model")
+  .action(generateModel);
+
+program
+  .command("generate:view <view-name>")
+  .description("Generate a view")
+  .action(generateView);
+
+program
+  .command("generate:route <route-name>")
+  .description("Generate a route")
   .action(generateModel);
 
 program.parse(process.argv);

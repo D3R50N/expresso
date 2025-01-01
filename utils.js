@@ -149,13 +149,13 @@ async function createProject(projectName) {
     .toString()
     .split("")
     .reduce((a, b) => parseInt(a) + parseInt(b));
-  
+
   var configure_db = await inquirer.prompt([
     {
       type: "number",
       name: "port",
       message: "Enter port number for the server:",
-      default:defaultPort,
+      default: defaultPort,
     },
     {
       type: "confirm",
@@ -418,7 +418,7 @@ async function generateController(controllerName) {
       {
         type: "confirm",
         name: "overwrite",
-        message: "Controller already exists, overwrite?",
+        message: "Controller " + controllerName + " already exists, overwrite?",
         default: false,
       },
     ]);
@@ -450,7 +450,10 @@ async function generateModel(modelName) {
       {
         type: "confirm",
         name: "overwrite",
-        message: "Model already exists, overwrite?",
+        message:
+          "Model " +
+          toLitt(modelName + " model") +
+          " already exists, overwrite?",
         default: false,
       },
     ]);
@@ -470,30 +473,56 @@ async function generateModel(modelName) {
     path.join("models", `${toLitt(modelName + " model")}.js`)
   );
 }
+
+async function generateView(viewName) {
+  const viewPath = path.join(process.cwd(), "views", `${toLitt(viewName)}.ejs`);
+
+  if (fs.existsSync(viewPath)) {
+    var prompt = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwrite",
+        message: "View " + toLitt(viewName) + " already exists, overwrite?",
+        default: false,
+      },
+    ]);
+
+    if (!prompt.overwrite) return;
+  }
+
+  const viewTemplatePath = path.join(generatorPath, "view.ejs");
+  await fs.copy(viewTemplatePath, viewPath);
+  await setVarsInFile(viewPath, {
+    VIEW_NAME: toLitt(viewName, true)
+      .replaceAll("\\", " ")
+      .replaceAll("/", " "),
+  });
+
+  console.log("Generated", path.join("views", `${toLitt(viewName)}.ejs`));
+}
+
 async function generate() {
-  const choices = [
-    "Controller",
-    "JWT Secret Key",
-    "Middleware",
-    "Migration",
-    "Model",
-    "Route",
-    "Seeder",
-    "Service",
-    "View",
-  ];
+  const choices = {
+    mvc: "Model-View-Controller",
+    mdl: "Model",
+    vw: "View",
+    ctr: "Controller",
+    jwt: "JWT Secret Key",
+    rte: "Route",
+    mdw: "Middleware",
+    svc: "Service",
+  };
   const choice = await inquirer.prompt([
     {
       type: "list",
       name: "type",
       message: "What do you want to generate ?",
-      choices: choices,
+      choices: Object.values(choices),
     },
   ]);
-  const index = choices.indexOf(choice.type);
 
-  switch (index) {
-    case 0:
+  switch (choice.type) {
+    case choices.ctr:
       var controllerName = await inquirer.prompt([
         {
           type: "input",
@@ -510,10 +539,10 @@ async function generate() {
 
       generateController(controllerName.controllerName);
       break;
-    case 1:
+    case choices.jwt:
       generateJWT();
       break;
-    case 4:
+    case choices.mdl:
       var modelName = await inquirer.prompt([
         {
           type: "input",
@@ -531,20 +560,63 @@ async function generate() {
       generateModel(modelName.modelName);
       break;
 
+    case choices.vw:
+      var viewName = await inquirer.prompt([
+        {
+          type: "input",
+          name: "viewName",
+          message: "Enter view name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "View name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      generateView(viewName.viewName);
+      break;
+
+    case choices.mvc:
+      var name = await inquirer.prompt([
+        {
+          type: "input",
+          name: "name",
+          message: "Enter MVC name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "MVC name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      await generateMVC(name.name);
+      break;
+
     default:
       break;
   }
 }
 
+async function generateMVC(name) {
+  await generateModel(name);
+  await generateView(name);
+  await generateController(name);
+}
 module.exports = {
   toLitt,
   setVarsInFile,
   promptProject,
   generateJWT,
+  generateView,
   setEnvKey,
   getEnvKey,
   deleteEnvKey,
   generateController,
+  generateMVC,
   generateModel,
   generate,
 };

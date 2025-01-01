@@ -5,7 +5,6 @@ const User = require("../../models/userModel");
 // const { getDateInfo, strDate, dateFromStamp } = require("./date");
 const CookieService = require("../cookies");
 const PaymentService = require("../payment");
-const UploadService = require("../upload");
 
 class AuthService {
 

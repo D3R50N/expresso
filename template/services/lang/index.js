@@ -22,25 +22,23 @@ class LangService {
     }
   }
 
-  static init(app) {
-    app.use((req, res, next) => {
-      res.locals.tr = {};
+  static tr(req, res, next) {
+    res.locals.tr = {};
 
-      let lang = req.query.lang;
-      if (!translations[lang]) lang = CookieService.from(req, res).get("lang");
-      if (!translations[lang]) lang = this.getLang();
+    let lang = req.query.lang;
+    if (!translations[lang]) lang = CookieService.from(req, res).get("lang");
+    if (!translations[lang]) lang = this.getLang();
 
-      const translation = translations[lang];
-      if (!translation) return next();
+    const translation = translations[lang];
+    if (!translation) return next();
 
-      CookieService.from(req, res).set("lang", lang);
-      req.lang = lang;
-      for (let key of Object.keys(translation)) {
-        const tr = translations[lang][key];
-        res.locals.tr[key] = tr;
-      }
-      next();
-    });
+    CookieService.from(req, res).set("lang", lang);
+    req.lang = lang;
+    for (let key of Object.keys(translation)) {
+      const tr = translations[lang][key];
+      res.locals.tr[key] = tr;
+    }
+    next();
   }
 }
 
