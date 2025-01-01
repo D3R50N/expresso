@@ -1,5 +1,10 @@
 class RoutesService {
   static routes = [];
+  static host = "";
+
+  static getUrl(req) {
+    return this.host + req.originalUrl;
+  }
 
   static log() {
     const methods = new Set(
@@ -12,9 +17,9 @@ class RoutesService {
 
     for (let method of methods.keys()) {
       console.log(`\n[${method}]`);
-      for (let route of this.routes.filter(
-        (r) => r.methods.toUpperCase() == method
-      )) {
+      for (let route of this.routes
+        .filter((r) => r.methods.toUpperCase() == method)
+        .sort((a, b) => a.path.localeCompare(b.path))) {
         console.log(
           `  ${route.path} \t (${route.middlewares.length} middlewares)`
         );
@@ -57,6 +62,11 @@ class RoutesService {
     }
 
     traverseStack(app._router.stack);
+
+    app.use((req, res, next) => {
+      this.host = req.protocol + "://" + req.get("host");
+      next();
+    });
   }
 }
 

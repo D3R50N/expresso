@@ -49,8 +49,9 @@ app.listen(config.port, () => {
 
   if (config.setupDb && config.dbUri) require("./config/db");
   const address = config.isDev ? "http://localhost:" : "port ";
-  logger.info(`Server is running on ${address}${config.port}`); //shows in console and saved in log file
+
   RoutesService.log();
+  logger.info(`Server is running on ${address}${config.port}`); //shows in console and saved in log file
 });
 
 module.exports = app;
