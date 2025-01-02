@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
 // Routes
 
-app.use(UploadService.router("/storage/files/:filename"));
+app.use(UploadService.router());
 app.use(ROUTES.API_BASE, api_routes);
 
 // Services

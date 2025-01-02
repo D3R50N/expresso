@@ -19,39 +19,10 @@ To create a new ExpressJS project with Expresso, use the following command:
 expresso new myapp
 ```
 
-This command will create a new folder named `myapp` with the following project structure:
+This command will create a new folder named `myapp`
 
 ```bat
 myapp/
-├── config/
-│   ├── config.js
-│   ├── db.js
-├── controllers/
-│   ├── userController.js
-│   ├── authController.js
-├── middlewares/
-│   ├── authMiddleware.js
-│   ├── errorHandler.js
-├── models/
-│   ├── userModel.js
-│   ├── postModel.js
-├── routes/
-│   ├── userRoutes.js
-│   ├── authRoutes.js
-│   ├── index.js
-├── services/
-│   ├── authService.js
-│   ├── userService.js
-├── utils/
-│   ├── logger.js
-│   ├── constants.js
-├── views/
-│   ├── index.ejs
-│   ├── error.ejs
-├── .gitignore
-├── app.js
-├── package.json
-└── README.md
 ```
 
 To see available commands, use the following command:
@@ -79,19 +50,9 @@ To start the ExpressJS server, use the following command:
 npm start
 ```
 
-## Project Structure
+## Full Documentation
 
-- **config/**: Contains application configuration files.
-- **controllers/**: Contains functions that handle HTTP requests and responses.
-- **middlewares/**: Contains middlewares to process requests before they reach the controllers.
-- **models/**: Contains data models for the application.
-- **routes/**: Contains route definitions.
-- **services/**: Contains business logic, complex interactions, and service calls.
-- **utils/**: Contains reusable utilities for the application.
-- **views/**: Contains view templates (if using a template engine like EJS).
-- **app.js**: Main entry point of the Express application.
-- **package.json**: npm configuration file.
-- **README.md**: Project documentation.
+See full documentation on the [Expresso web page](http://expresso.maxdev.tech/)
 
 ## Contributions
 

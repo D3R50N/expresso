@@ -1,4 +1,5 @@
 const ROUTES = {
+  BASE: "/",
   API_BASE: "/api",
 
   STORAGE_GET_FILE: "/storage/files/:filename",
