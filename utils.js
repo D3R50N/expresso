@@ -103,7 +103,7 @@ async function createProject(projectName) {
       type: "confirm",
       name: "apiOnly",
       message: "Start project with API only ?",
-      default: true,
+      default: false,
     },
   ]);
 

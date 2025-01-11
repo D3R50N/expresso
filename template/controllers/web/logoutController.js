@@ -6,8 +6,8 @@ const AppService = require("../../services");
 exports.index = async (req, res) => {
   try {
     const expNumber = req.query._exp || 0;
-    CookieService.from(req, res).clear(AppService.config.authToken);
-    CookieService.from(req, res).set("_exp", expNumber);
+    CookieService.of(req, res).clear(AppService.config.authToken);
+    CookieService.of(req, res).set("_exp", expNumber);
     return res.redirect(ROUTES.LOGIN);
   } catch (err) {
     console.log(err);

@@ -26,7 +26,9 @@ app.use(cors());
 app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
+
 app.use(LangService.tr);
+app.use(RoutesService.router);
 
 // EJS Template Engine
 app.set("view engine", "ejs");
@@ -45,12 +47,12 @@ app.use(errorHandler.e404);
 app.use(errorHandler.e500);
 
 app.listen(config.port, () => {
-  console.clear();
+  // console.clear();
 
   if (config.setupDb && config.dbUri) require("./config/db");
   const address = config.isDev ? "http://localhost:" : "port ";
 
-  RoutesService.log();
+  // RoutesService.log();
   logger.info(`Server is running on ${address}${config.port}`); //shows in console and saved in log file
 });
 

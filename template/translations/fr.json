@@ -23,6 +23,11 @@
   "about": "À propos",
   "faq": "FAQ",
   "welcome": "Bienvenue sur",
-  "logout":"Se déconnecter",
-  "return_back":"Retour à la page précédente"
+  "logout": "Se déconnecter",
+  "return_back": "Retour à la page précédente",
+  "need_verify": "Ce compte $email doit être vérifié",
+  "password_reset_title": "Récupération de votre compte",
+  "email_sent": "Email envoyé. Veuillez vérifier vos courriers ou spams.",
+  "email_not_sent": "Erreur lors de l'envoi du mail.",
+  "resend_mail": "Renvoyer le mail de vérification"
 }

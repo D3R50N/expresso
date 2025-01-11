@@ -98,7 +98,32 @@ class DateService {
   }
 
   static addToDate({ h, s, m, ms, d }, date = new Date()) {
-    return new Date(date.getTime() + toTimeStamp({ h, s, m, ms, d }));
+    return new Date(date.getTime() + this.toTimeStamp({ h, s, m, ms, d }));
   }
+
+  static compare(d1, d2) {
+    const t1 = d1.getTime();
+    const t2 = d2.getTime();
+    return t1 == t2 ? 0 : t1 < t2 ? -1 : 1;
+  }
+
+  static isAfter(d1, d2) {
+    return this.compare(d1, d2) === 1;
+  }
+
+  static isBefore(d1, d2) {
+    return this.compare(d1, d2) === -1;
+  }
+
+  static isAfterNow(d1) {
+    const now = new Date();
+    return this.isBefore(now, d1);
+  }
+
+  static isBeforeNow(d1) {
+    const now = new Date();
+    return this.isBefore(d1, now);
+  }
+  
 }
 module.exports = DateService;

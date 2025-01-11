@@ -9,7 +9,7 @@ class CoreError {
     let errorsFile = require("./fr");
     const lang =
       req.lang ??
-      CookieService.from(req, res).get("lang") ??
+      CookieService.of(req, res).get("lang") ??
       LangService.getLang();
 
     try {

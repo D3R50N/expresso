@@ -31,17 +31,14 @@
 
 <body>
   <div class="container">
-    <div>
       <div class="login-register-page">
-        <!-- Welcome Text -->
         <div class="welcome-text">
           <h1><%= tr.register_t?.toUpperCase() %></h1>
           <h3>[##NAME##] <%= tr.by %> Expresso</h3>
-          <span> <%= tr.already_have_account %> <a href="/login"><%= tr.login %></a></span>
+          <span> <%= tr.already_have_account %> <a href="<%= routes.login %>"><%= tr.login %></a></span>
         </div>
 
-        <!-- Form -->
-        <form action="/register" method="post" id="register-form" enctype="multipart/form-data">
+        <form action="<%= routes.register %>" method="post" id="register-form" enctype="multipart/form-data">
           <div class="input-with-icon-left">
             <i class="icon-line-awesome-user"></i>
             <input type="text" class="input-text with-border" name="name" id="name" placeholder="<%= tr.fullname %>" required value="<%= locals.body?.name %>" />
@@ -81,7 +78,6 @@
           </button>
         </div>
       </div>
-    </div>
   </div>
 
   <% if (locals.error) { %>

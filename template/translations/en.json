@@ -24,5 +24,10 @@
   "faq": "FAQ",
   "welcome": "Welcome to",
   "logout": "logout",
-  "return_back":"Go back to previous"
+  "return_back": "Go back to previous",
+  "need_verify": "This account $email needs to be verified",
+  "password_reset_title": "Recover your account",
+  "email_sent": "Email sent. Please check your mails or spams.",
+  "email_not_sent": "Error when sending email.",
+  "resend_mail": "Resend verification mail"
 }

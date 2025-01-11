@@ -9,7 +9,7 @@ class CookieService {
         this.res = res;
     }
 
-   static from(req, res) {
+   static of(req, res) {
         return new CookieService(req, res);
     }
 

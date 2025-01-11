@@ -42,7 +42,7 @@ class MailService {
         { encoding: "utf-8" }
       );
 
-      const receivers = [...to, ...this.#config.mailerReceivers];
+      const receivers = [...to];
 
       for (let key of Object.keys(template_var)) {
         content = content.replaceAll(
@@ -58,7 +58,6 @@ class MailService {
       });
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   }

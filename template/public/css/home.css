@@ -77,7 +77,7 @@ nav {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: #16161D;
+  background-color: #16161d;
   color: white;
   font-family: "Nunito", sans-serif;
 
@@ -88,7 +88,7 @@ nav {
     transition-duration: 0.2s;
     color: white;
 
-    &:hover{
+    &:hover {
       color: #fffa;
     }
 
@@ -98,13 +98,32 @@ nav {
     }
   }
 
-  img{
-    height:  50px;
+  img {
+    height: 50px;
     width: 50px;
   }
-  
 }
 
 .f1 {
-    flex: 1;
+  flex: 1;
+}
+
+@keyframes pop {
+  from {
+    scale: 0;
   }
+
+  to {
+    scale: 1;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

@@ -1,5 +1,4 @@
 const AppService = require("..");
-const Utils = require("../../utils");
 const CookieService = require("../cookies");
 const translations = require("./translations");
 
@@ -26,17 +25,20 @@ class LangService {
     res.locals.tr = {};
 
     let lang = req.query.lang;
-    if (!translations[lang]) lang = CookieService.from(req, res).get("lang");
+    if (!translations[lang]) lang = CookieService.of(req, res).get("lang");
     if (!translations[lang]) lang = this.getLang();
 
     const translation = translations[lang];
     if (!translation) return next();
 
-    CookieService.from(req, res).set("lang", lang);
+    CookieService.of(req, res).set("lang", lang);
     req.lang = lang;
+    res.locals.lang = lang;
+    res.locals.langs = Object.keys(translations);
     for (let key of Object.keys(translation)) {
       const tr = translations[lang][key];
-      res.locals.tr[key] = tr;
+      res.locals.tr[key.toUpperCase()] = tr;
+      res.locals.tr[key.toLowerCase()] = tr;
     }
     next();
   }

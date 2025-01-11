@@ -1,3 +1,5 @@
+const ROUTES = require("../../routes/routes");
+
 class RoutesService {
   static routes = [];
   static host = "";
@@ -62,12 +64,18 @@ class RoutesService {
     }
 
     traverseStack(app._router.stack);
-
-    app.use((req, res, next) => {
-      this.host = req.protocol + "://" + req.get("host");
-      next();
-    });
   }
+
+  static router = (req, res, next) => {
+    this.host = req.protocol + "://" + req.get("host");
+    res.locals.routes = {};
+
+    for (let k of Object.keys(ROUTES)) {
+      res.locals.routes[k.toUpperCase()] = ROUTES[k];
+      res.locals.routes[k.toLowerCase()] = ROUTES[k];
+    }
+    next();
+  };
 }
 
 module.exports = RoutesService;

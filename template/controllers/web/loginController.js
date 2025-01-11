@@ -8,9 +8,9 @@ const CoreError = require("../../core/errors");
 
 exports.index = async (req, res) => {
   try {
-    var expiredCode = CookieService.from(req, res).get("_exp") || 0;
+    var expiredCode = CookieService.of(req, res).get("_exp") || 0;
     if (expiredCode == 1) {
-      CookieService.from(req, res).clear("_exp");
+      CookieService.of(req, res).clear("_exp");
 
       return res.render("login", {
         error: CoreError.from(req,res).code.SESSION_EXPIRED,
@@ -58,7 +58,7 @@ exports.post = async (req, res) => {
     }
     const token = AuthService.generateToken(user);
 
-    CookieService.from(req, res).set(AppService.config.authToken, token);
+    CookieService.of(req, res).set(AppService.config.authToken, token);
 
     const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);

@@ -4,7 +4,7 @@ const CookieService = require("../../services/cookies");
 const AppService = require("../../services");
 
 module.exports = (req, res, next) => {
-  const token = CookieService.from(req, res).get(AppService.config.authToken);
+  const token = CookieService.of(req, res).get(AppService.config.authToken);
   if (!token) {
     return next();
   }

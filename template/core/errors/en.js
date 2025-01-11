@@ -109,4 +109,9 @@ exports.code = Object.freeze({
     status: 440,
     code: "SESSION_EXPIRED",
   },
+  ACCOUNT_LOCKED: {
+    message: "Account locked. Please contact an assistance.",
+    status: 401,
+    code: "ACCOUNT_LOCKED",
+  },
 });

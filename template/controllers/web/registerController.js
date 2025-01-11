@@ -63,7 +63,7 @@ exports.post = async (req, res) => {
 
     const token = AuthService.generateToken(user);
 
-    CookieService.from(req, res).set(AppService.config.authToken, token);
+    CookieService.of(req, res).set(AppService.config.authToken, token);
 
     const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);

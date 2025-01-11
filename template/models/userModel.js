@@ -1,31 +1,40 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    stripeId: {
+      type: String,
+    },
+    accountVerified: {
+      type: Boolean,
+      default: false,
+    },
+    accountLocked: {
+      type: Boolean,
+      default: false,
+    },
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  image: {
-    type: String,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  stripeId: {
-    type: String,
-  },
- 
-} ,{
-  timestamps: true, // Ajoute createdAt et updatedAt
-});
-
+  {
+    timestamps: true,
+  }
+);
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);

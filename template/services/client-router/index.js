@@ -1,6 +1,7 @@
 const ROUTES = require("../../routes/routes");
 const path = require("path");
 const RoutesService = require("../routes");
+const accountMiddleware = require("../../middlewares/web/accountMiddleware");
 
 class ClientRouterService {
   static basePath = ROUTES.CLIENT_ROUTER;

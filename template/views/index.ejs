@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Expresso - [##NAME##]</title>
-    <link rel="stylesheet" href="/css/expresso.css" />
-    <link rel="stylesheet" href="/css/home.css" />
-    <link rel="stylesheet" href="/lib/expresso-client-router/style.css" />
-  </head>
 
-  <body>
-    <nav>
-      <span class="f1">[##NAME##] - <%=tr.greetings%></span>
-      <a href="/" route router-nav=""><%= tr.home %></a
-      ><a href="/about" route router-nav=""><%= tr.about %></a
-      ><a href="/faq" route router-nav=""><%= tr.faq %></a>
-      <img src="<%=locals.user?.image %>" route="/?name=<%=locals.name%>"/>
+<head>
+  <title>Expresso - [##NAME##]</title>
+  <link rel="stylesheet" href="/css/expresso.css" />
+  <link rel="stylesheet" href="/css/home.css" />
+  <link rel="stylesheet" href="/lib/expresso-client-router/style.css" />
+</head>
 
-    </nav>
-    <div class="content" router-app>
-     
-    </div>
+<body>
+  <nav>
+    <span class="f1">[##NAME##] - <%=tr.greetings%> - <%= lang %></span>
 
-    <a href="/logout" id="btn_logout"><%= tr.logout?.toUpperCase() %> ↪</a>
+    <!-- NAV -->
+    <a href="/" route router-nav=""><%= tr.home %></a><a href="/about" route router-nav=""><%= tr.about %></a><a href="/faq" route router-nav=""><%= tr.faq %></a>
 
-    <script src="/lib/expresso-client-router/index.js"></script>
-  </body>
+    <!-- LANG -->
+    <% const l = langs.filter(_l=>_l!=lang) %>
+    <a href="/?lang=<%= l %>" style="padding: 0;">
+      <img src="<%=locals.user?.image %>" />
+    </a>
+
+
+  </nav>
+  <div class="content" router-app>
+
+  </div>
+
+  <a href="/logout" id="btn_logout"><%= tr.logout?.toUpperCase() %> ↪</a>
+
+  <script src="/lib/expresso-client-router/index.js"></script>
+</body>
+
 </html>
