@@ -1,22 +1,13 @@
 const mongoose = require("mongoose");
 
 const [##MODEL_NAME##]Schema = new mongoose.Schema({
-  id: {
+  uid: {
     type: String,
     required: true,
     unique:true,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-
 } ,{
-  timestamps: true, // Ajoute createdAt et updatedAt
+  timestamps: true, 
 });
 
 [##MODEL_NAME##]Schema.pre("save", function (next) {

@@ -391,6 +391,53 @@ function deleteEnvKey(key) {
   fs.writeFileSync(envPath, content);
 }
 
+async function generateMiddleware(middlewareName) {
+  middlewareName += " middleware";
+  middlewareName = toLitt(middlewareName);
+
+  var prompt = await inquirer.prompt([
+    {
+      type: "list",
+      name: "type",
+      message: "Select middleware type:",
+      choices: ["API", "Web"],
+    },
+  ]);
+
+  var middlewareType = prompt.type.toLowerCase();
+
+  const middlewarePath = path.join(
+    process.cwd(),
+    "middlewares",
+    middlewareType,
+    `${middlewareName}.js`
+  );
+
+  if (fs.existsSync(middlewarePath)) {
+    var prompt = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwrite",
+        message: "Middleware " + middlewareName + " already exists, overwrite?",
+        default: false,
+      },
+    ]);
+
+    if (!prompt.overwrite) return;
+  }
+
+  const middlewareTemplatePath = path.join(generatorPath, "middleware.js");
+  await fs.copy(middlewareTemplatePath, middlewarePath);
+  await setVarsInFile(middlewarePath, {
+    MIDDLEWARE_NAME: toLitt(middlewareName, true),
+  });
+
+  console.log(
+    "Generated",
+    path.join("middlewares", middlewareType, middlewareName + ".js")
+  );
+}
+
 async function generateController(controllerName) {
   controllerName += " controller";
   controllerName = toLitt(controllerName);
@@ -501,6 +548,8 @@ async function generateView(viewName) {
   console.log("Generated", path.join("views", `${toLitt(viewName)}.ejs`));
 }
 
+
+
 async function generate() {
   const choices = {
     mvc: "Model-View-Controller",
@@ -578,6 +627,24 @@ async function generate() {
       generateView(viewName.viewName);
       break;
 
+    case choices.mdw:
+      var middlewareName = await inquirer.prompt([
+        {
+          type: "input",
+          name: "middlewareName",
+          message: "Enter middleware name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "Middleware name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      generateMiddleware(middlewareName.middlewareName);
+      break;
+
     case choices.mvc:
       var name = await inquirer.prompt([
         {
@@ -616,6 +683,7 @@ module.exports = {
   getEnvKey,
   deleteEnvKey,
   generateController,
+  generateMiddleware,
   generateMVC,
   generateModel,
   generate,

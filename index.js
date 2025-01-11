@@ -13,6 +13,7 @@ const {
   deleteEnvKey,
   generate,
   generateMVC,
+  generateMiddleware,
 } = require("./utils");
 
 program
@@ -57,9 +58,14 @@ program
   .action(generateMVC);
 
 program
-  .command("generate:controller <controller-name>")
-  .description("Generate a controller")
-  .action(generateController);
+  .command("generate:middleware <middleware-name>")
+  .description("Generate a middleware")
+  .action(generateMiddleware);
+
+  program
+    .command("generate:controller <controller-name>")
+    .description("Generate a controller")
+    .action(generateController);
 
 program
   .command("generate:model <model-name>")

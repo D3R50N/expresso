@@ -7,8 +7,7 @@ const CookieService = require("../cookies");
 const PaymentService = require("../payment");
 
 class AuthService {
-
-
+    
     static #config = AppService.config;
 
     static generateToken = (user) => {

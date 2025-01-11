@@ -11,10 +11,6 @@ const UploadService = require("../../services/upload");
 
 router.get(ROUTES.BASE, webAuthMiddleware, homeController.index);
 
-// Client router rendering (always render homepage as there is a client router)
-router.get("/about", webAuthMiddleware, homeController.index);
-router.get("/faq", webAuthMiddleware, homeController.index);
-
 // AUTH
 router.get(ROUTES.LOGIN, preventLogin, loginController.index);
 router.get(ROUTES.LOGOUT, logoutController.index);
