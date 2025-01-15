@@ -1,13 +1,29 @@
 const ROUTES = require("../../routes/routes");
 
+
+/**
+ * Service to a get many informations about the current app
+ * As host, routes, middlewares for each routes, etc..
+ */
 class RoutesService {
   static routes = [];
   static host = "";
 
+  /**
+   * Gets the full URL for the current request.
+   *
+   * @param {Object} req - The request object.
+   * @param {string} req.originalUrl - The original URL of the request.
+   *
+   * @returns {string} - The full URL of the request.
+   */
   static getUrl(req) {
     return this.host + req.originalUrl;
   }
 
+  /**
+   * Logs all available routes and their HTTP methods.
+   */
   static log() {
     const methods = new Set(
       this.routes
@@ -29,6 +45,14 @@ class RoutesService {
     }
   }
 
+  /**
+   * Finds a route matching the given path and method.
+   *
+   * @param {string} route - The path of the route to find.
+   * @param {string} [method="get"] - The HTTP method (default is GET).
+   *
+   * @returns {Object|undefined} - The route object if found, or undefined.
+   */
   static find(route, method = "get") {
     return this.routes.find(
       (r) =>
@@ -37,6 +61,12 @@ class RoutesService {
     );
   }
 
+  /**
+   * Initializes the route stack and populates the routes array.
+   * This should be called with the Express application instance.
+   *
+   * @param {Object} app - The Express application instance.
+   */
   static init(app) {
     this.routes = [];
     function traverseStack(stack, basePath = "") {
@@ -66,6 +96,13 @@ class RoutesService {
     traverseStack(app._router.stack);
   }
 
+  /**
+   * Middleware that makes routes available in the `res.locals` object for rendering.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   */
   static router = (req, res, next) => {
     this.host = req.protocol + "://" + req.get("host");
     res.locals.routes = {};

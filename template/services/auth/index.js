@@ -1,20 +1,41 @@
 const jwt = require("jsonwebtoken");
 const AppService = require("..");
 const User = require("../../models/userModel");
-
-// const { getDateInfo, strDate, dateFromStamp } = require("./date");
 const CookieService = require("../cookies");
 const PaymentService = require("../payment");
 
+/**
+ * Service for handling authentication and user-related operations.
+ * Includes functionality for generating tokens, authenticating users, 
+ * and integrating with Stripe for subscription management.
+ */
 class AuthService {
+  /**
+   * Configuration settings for the authentication service.
+   * @type {object}
+   * @private
+   */
   static #config = AppService.config;
 
+  /**
+   * Generates a JSON Web Token (JWT) for a user.
+   * @param {object} user - The user object containing at least an `id` property.
+   * @returns {string} The generated JWT.
+   */
   static generateToken = (user) => {
     return jwt.sign({ userId: user.id }, this.#config.jwtSecret, {
       expiresIn: this.#config.jwtMaxDate,
     });
   };
 
+  /**
+   * Authenticates a user based on a token stored in cookies.
+   * Optionally integrates with Stripe to fetch subscription details.
+   * 
+   * @param {object} req - The HTTP request object, containing cookies and headers.
+   * @param {boolean} [withStripe=false] - Whether to fetch Stripe subscription details for the user.
+   * @returns {Promise<object|null>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
+   */
   static async authUser(req, withStripe = false) {
     const token = CookieService.of(req, null).get(this.#config.authToken);
 
@@ -30,20 +51,30 @@ class AuthService {
 
       if (!withStripe) return user;
 
-      const stripeUser = Object.assign(user);
 
-      var stripeId =
+      const stripeId =
         user.stripeId ?? (await PaymentService.createStripeCustomer(user)).id;
+      
+      const stripeUser = Object.assign(user);
+      
       const subscriptions = (
         await PaymentService.stripe.subscriptions.list({
           customer: stripeId,
+          status:"all",
         })
       ).data;
 
       stripeUser.subscriptions = [];
       stripeUser.hasActiveSubscriptions = false;
 
-      const actives = subscriptions.filter((sub) => sub.status === "active");
+      // all active subs and canceled but not ended
+      const actives = subscriptions.filter(
+        (sub) =>
+          sub.status === "active" ||
+          (sub.status === "canceled" &&
+            sub.current_period_end * 1000 > Date.now())
+      );
+
       for (const sub of actives) {
         const s = {
           id: sub.id,
