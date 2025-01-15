@@ -51,80 +51,15 @@ class AuthService {
 
       if (!withStripe) return user;
 
-      const stripeId =
-        user.stripeId ?? (await PaymentService.createStripeCustomer(user)).id;
-
-      const stripeUser = Object.assign(user);
-
-      const subscriptions = (
-        await PaymentService.stripe.subscriptions.list({
-          customer: stripeId,
-          status: "all",
-        })
-      ).data;
-
-      stripeUser.subscriptions = [];
-      stripeUser.hasActiveSubscriptions = false;
-
-      // all active subs and canceled but not ended
-      const actives = subscriptions.filter(
-        (sub) =>
-          sub.status === "active" ||
-          (sub.status === "canceled" &&
-            sub.current_period_end * 1000 > Date.now())
-      );
-
-      for (const sub of actives) {
-        const s = {
-          id: sub.id,
-          items: [],
-        };
-
-        /**
-         *
-         * @param {number} stamp Timestamp to convert
-         * @returns Object with strings date
-         */
-        function dateObject(stamp) {
-          return {
-            strFull: strDate(stamp, true, true),
-            strDate: strDate(stamp),
-            strDateWithDay: strDate(stamp, true),
-            strDateWithTime: strDate(stamp, false, true),
-            date: dateFromStamp(stamp),
-          };
-        }
-
-         const subEndTimestamp = sub.current_period_end * 1000;
-         const subStartTimestamp = sub.current_period_start * 1000;
-
-    
-        s.subStart = dateObject(subStartTimestamp);
-        s.subEnd = dateObject(subEndTimestamp);
-
-        for (const item of sub.items.data) {
-          const priceId = item.price.id;
-          const productId = item.price.product;
-          const product = await PaymentService.stripe.products.retrieve(
-            productId
-          );
-          const productName = product.name;
-          const productDescription = product.description;
-
-          const obj = { priceId, productId, productDescription, productName };
-          s.items.push(obj);
-        }
-
-        stripeUser.subscriptions.push(s);
-      }
-
-      stripeUser.hasActiveSubscriptions = actives.length > 0;
-      return stripeUser;
+      return await PaymentService.userWithStripe(user);
+      
     } catch (err) {
       console.log(err);
       return null;
     }
   }
+
+  
 }
 
 module.exports = AuthService;
