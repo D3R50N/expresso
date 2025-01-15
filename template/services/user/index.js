@@ -41,9 +41,11 @@ class UserService {
    *
    * This method generates a verification link for the user and sends a template-based email with the link.
    *
+   * @param {boolean} [useApiUrl=false] If true, the link sent will include /api/users/ referred to the email verification route
+   *
    * @returns {Promise<boolean>} - Returns `true` if the email was sent successfully, `false` otherwise.
    */
-  async sendVerificationEmail() {
+  async sendVerificationEmail(useApiUrl = false) {
     const userId = this.user.id;
 
     // Find existing verification link or create a new one if expired or not available.
@@ -51,7 +53,10 @@ class UserService {
     var link = available.find((l) => !LinkService.hasExpired(l));
 
     if (!link) link = await LinkService.create(userId, Links.VERIFICATION);
-    const url = `${RoutesService.host}${ROUTES.VERIFY_ACCOUNT}/${link.path}`;
+
+    const url = useApiUrl
+      ? `${RoutesService.host}${ROUTES.API_BASE}${ROUTES.USERS}${ROUTES.VERIFY_ACCOUNT}/${link.path}`
+      : `${RoutesService.host}${ROUTES.VERIFY_ACCOUNT}/${link.path}`;
 
     // Send verification email with the generated URL.
     return await MailService.sendTemplateMail({
@@ -70,9 +75,11 @@ class UserService {
    *
    * This method generates a password reset link for the user and sends a template-based email with the link.
    *
+   * @param {boolean} [useApiUrl=false] If true, the link sent will include /api/users/ referred to the password reset route
+   *
    * @returns {Promise<boolean>} - Returns `true` if the email was sent successfully, `false` otherwise.
    */
-  async sendPasswordResetEmail() {
+  async sendPasswordResetEmail(useApiUrl = false) {
     const userId = this.user.id;
 
     // Find existing password reset link or create a new one if expired or not available.
@@ -80,7 +87,9 @@ class UserService {
     var link = available.find((l) => !LinkService.hasExpired(l));
 
     if (!link) link = await LinkService.create(userId, Links.PASSWORD_RESET);
-    const url = `${RoutesService.host}${ROUTES.RESET_PASSWORD}/${link.path}`;
+    const url = useApiUrl
+      ? `${RoutesService.host}${ROUTES.API_BASE}${ROUTES.USERS}${ROUTES.RESET_PASSWORD}/${link.path}`
+      : `${RoutesService.host}${ROUTES.RESET_PASSWORD}/${link.path}`;
 
     // Send password reset email with the generated URL.
     return await MailService.sendTemplateMail({

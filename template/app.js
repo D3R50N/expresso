@@ -39,7 +39,7 @@ app.use(ROUTES.BASE, web_routes);
 app.use(ROUTES.API_BASE, api_routes);
 
 // Services
-RoutesService.init(app);
+RoutesService.getAppRoutes(app);
 ClientRouterService.init(app);
 
 // Error Handling Middleware

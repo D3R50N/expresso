@@ -22,6 +22,7 @@ class UploadService {
   }
 
   static #routePath = ROUTES.STORAGE_GET_FILE;
+  static #routePutPath = ROUTES.STORAGE_PUT_FILE;
 
   /**
    * Returns the route path for accessing a file based on its filename.
@@ -161,7 +162,7 @@ class UploadService {
     const p = path.join(
       __dirname,
       "../../",
-      UploadService.#fileFolder({
+      this.#fileFolder({
         originalname: filename,
       }),
       filename
@@ -169,7 +170,7 @@ class UploadService {
 
     return {
       filename,
-      folder: UploadService.#fileFolder({
+      folder: this.#fileFolder({
         originalname: filename,
       }),
       path: p,
@@ -186,10 +187,19 @@ class UploadService {
   static getFile(req, res, next) {
     const filename = req.params.filename;
     if (!filename) return res.sendStatus(400);
-    const p = UploadService.file(filename).path;
+    const p = this.file(filename).path;
 
     if (!fs.existsSync(p)) return res.sendStatus(404);
     return res.sendFile(p);
+  }
+
+  static putFile(req, res, next) {
+    const files = [];
+    for (let file of req.files ?? []) {
+      files.push(this.getRoutePath(file.filename));
+    }
+
+    return res.json(files);
   }
 
   /**
@@ -199,7 +209,8 @@ class UploadService {
    */
   static router() {
     const r = require("express").Router();
-    r.get(this.#routePath, UploadService.getFile);
+    r.get(this.#routePath, this.getFile);
+    r.post(this.#routePutPath, this.middleware.any);
     return r;
   }
 }

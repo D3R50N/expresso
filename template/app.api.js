@@ -12,6 +12,7 @@ const cors = require('cors');
 
 const UploadService = require("./services/upload");
 const RoutesService = require("./services/routes");
+const LangService = require("./services/lang");
 
 
 const app = express();
@@ -21,6 +22,8 @@ app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
+app.use(LangService.tr);
+app.use(RoutesService.router);
 
 // Routes
 
@@ -28,7 +31,7 @@ app.use(UploadService.router());
 app.use(ROUTES.API_BASE, api_routes);
 
 // Services
-RoutesService.init(app);
+RoutesService.getAppRoutes(app);
 
 // Error Handling Middleware
 app.use(errorHandler.e404);

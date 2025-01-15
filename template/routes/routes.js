@@ -11,6 +11,7 @@ const ROUTES = {
   RESET_PASSWORD: "/reset-password",
 
   STORAGE_GET_FILE: "/storage/files/:filename",
+  STORAGE_PUT_FILE: "/storage/files/",
 
   CLIENT_ROUTER: "/client-router",
 
@@ -21,8 +22,8 @@ const ROUTES = {
 
   USERS: "/users",
   FIND: "/:id",
-  GET: "/:id/get", // can be used as FIND
-  GET_ATTRIBUTE: "/:id/get/:attr",
+  GET: "/get",
+  GET_ATTRIBUTE: "/:attr",
 
   AUTH: "/auth",
   AUTH_LOGIN: "/login",

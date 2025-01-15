@@ -37,14 +37,3 @@ exports.getUserAttribute = async (req, res) => {
     errors.json(errors.code.USER_NOT_FOUND);
   }
 };
-
-exports.createUser = async (req, res) => {
-  const errors = CoreError.from(req, res);
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json(user);
-  } catch (err) {
-    errors.json(errors.code.USER_NOT_CREATED);
-  }
-};

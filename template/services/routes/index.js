@@ -67,7 +67,7 @@ class RoutesService {
    *
    * @param {Object} app - The Express application instance.
    */
-  static init(app) {
+  static getAppRoutes(app) {
     this.routes = [];
     function traverseStack(stack, basePath = "") {
       stack.forEach((layer) => {

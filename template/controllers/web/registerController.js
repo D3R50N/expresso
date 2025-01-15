@@ -19,11 +19,9 @@ exports.index = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-    const errors = CoreError.from(req, res);
+  const errors = CoreError.from(req, res);
   try {
-
     const user = new User(req.body);
-
 
     if (!MailService.isEmail(user.email)) {
       UploadService.deleteUploadedFiles([req.file]);
@@ -33,31 +31,35 @@ exports.post = async (req, res) => {
       });
     }
 
-    if (req.file)
-      user.image = UploadService.getRoutePath(req.file.filename);
-
+    if (req.file) user.image = UploadService.getRoutePath(req.file.filename);
 
     user.password = user.password?.trim();
     user.name = user.name?.trim();
 
-    if (user.password.length < 6) {
+    if (!user.password) {
       UploadService.deleteUploadedFiles([req.file]);
 
+      return res.render("register", {
+        error: errors.code.PASSWORD_REQUIRED,
+        body: req.body,
+      });
+    }
+
+    if (user.password.length < 6) {
+      UploadService.deleteUploadedFiles([req.file]);
 
       return res.render("register", {
         error: errors.code.PASSWORD_LENGTH,
         body: req.body,
       });
-
     }
 
-    if (user.password != req.body['password-repeat']) {
+    if (user.password != req.body["password-repeat"]) {
       UploadService.deleteUploadedFiles([req.file]);
       return res.render("register", {
         error: errors.code.PASSWORD_NOT_SAME,
         body: req.body,
       });
-
     }
     await user.save();
 
@@ -68,7 +70,6 @@ exports.post = async (req, res) => {
     const redirect = req.query.redirect || ROUTES.BASE;
     res.redirect(redirect);
   } catch (err) {
-
     // console.log(err);
     UploadService.deleteUploadedFiles([req.file]);
 

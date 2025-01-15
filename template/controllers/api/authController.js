@@ -1,6 +1,7 @@
 const CoreError = require("../../core/errors");
 const User = require("../../models/userModel");
 const AuthService = require("../../services/auth");
+const UploadService = require("../../services/upload");
 
 exports.login = async (req, res) => {
   const errors = CoreError.from(req, res);
@@ -34,10 +35,30 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
+  const errors = CoreError.from(req, res);
+
   try {
     const user = new User(req.body);
+
+    user.password = user.password?.trim();
+    user.name = user.name?.trim();
+
+    if (!user.password) {
+      return errors.json(errors.code.PASSWORD_REQUIRED);
+    }
+
+    if (user.password.length < 6) {
+      return errors.json(errors.code.PASSWORD_LENGTH);
+    }
+
+    if (user.password != req.body["password-repeat"]) {
+      return errors.json(errors.code.PASSWORD_NOT_SAME);
+    }
     await user.save();
-    res.status(201).json(user);
+
+    const token = AuthService.generateToken(user);
+
+    res.status(201).json({ token });
   } catch (err) {
     const errors = CoreError.from(req, res);
     if (err.code === 11000) errors.json(errors.code.USER_EXISTS);
