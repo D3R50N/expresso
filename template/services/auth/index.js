@@ -3,10 +3,10 @@ const AppService = require("..");
 const User = require("../../models/userModel");
 const CookieService = require("../cookies");
 const PaymentService = require("../payment");
-
+const { strDate, dateFromStamp } = require("../date");
 /**
  * Service for handling authentication and user-related operations.
- * Includes functionality for generating tokens, authenticating users, 
+ * Includes functionality for generating tokens, authenticating users,
  * and integrating with Stripe for subscription management.
  */
 class AuthService {
@@ -31,7 +31,7 @@ class AuthService {
   /**
    * Authenticates a user based on a token stored in cookies.
    * Optionally integrates with Stripe to fetch subscription details.
-   * 
+   *
    * @param {object} req - The HTTP request object, containing cookies and headers.
    * @param {boolean} [withStripe=false] - Whether to fetch Stripe subscription details for the user.
    * @returns {Promise<object|null>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
@@ -51,16 +51,15 @@ class AuthService {
 
       if (!withStripe) return user;
 
-
       const stripeId =
         user.stripeId ?? (await PaymentService.createStripeCustomer(user)).id;
-      
+
       const stripeUser = Object.assign(user);
-      
+
       const subscriptions = (
         await PaymentService.stripe.subscriptions.list({
           customer: stripeId,
-          status:"all",
+          status: "all",
         })
       ).data;
 
@@ -81,26 +80,29 @@ class AuthService {
           items: [],
         };
 
-        const subEndTimestamp = sub.current_period_end * 1000;
-        const subStartTimestamp = sub.current_period_start * 1000;
-        s.subEnd = {
-          strFull: strDate(subEndTimestamp, true, true),
-          strDate: strDate(subEndTimestamp),
-          strDateWithDay: strDate(subEndTimestamp, true),
-          strDateWithTime: strDate(subEndTimestamp, false, true),
-          date: dateFromStamp(subEndTimestamp),
-        };
-        s.subStart = {
-          strFull: strDate(subStartTimestamp, true, true),
-          strDate: strDate(subStartTimestamp),
-          strDateWithDay: strDate(subStartTimestamp, true),
-          strDateWithTime: strDate(subStartTimestamp, false, true),
-          date: dateFromStamp(subStartTimestamp),
-        };
+        /**
+         *
+         * @param {number} stamp Timestamp to convert
+         * @returns Object with strings date
+         */
+        function dateObject(stamp) {
+          return {
+            strFull: strDate(stamp, true, true),
+            strDate: strDate(stamp),
+            strDateWithDay: strDate(stamp, true),
+            strDateWithTime: strDate(stamp, false, true),
+            date: dateFromStamp(stamp),
+          };
+        }
 
-        const sub_items = sub.items.data;
+         const subEndTimestamp = sub.current_period_end * 1000;
+         const subStartTimestamp = sub.current_period_start * 1000;
 
-        for (const item of sub_items) {
+    
+        s.subStart = dateObject(subStartTimestamp);
+        s.subEnd = dateObject(subEndTimestamp);
+
+        for (const item of sub.items.data) {
           const priceId = item.price.id;
           const productId = item.price.product;
           const product = await PaymentService.stripe.products.retrieve(
