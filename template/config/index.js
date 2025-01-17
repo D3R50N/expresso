@@ -43,7 +43,7 @@ module.exports = {
 
   authToken: process.env.AUTH_TOKEN || "_tk",
 
-  appLang: process.env.APP_LANG || "fr",
+  appLang: process.env.APP_LANG || "en",
 
   stripePublishableKey: process.env.STRIPE_PK,
   stripeSecretKey: process.env.STRIPE_SK,

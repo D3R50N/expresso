@@ -32,6 +32,17 @@ const namesMap = {
   "routes.api.js": "routes.js",
 };
 
+function toFolderName(str = "") {
+  return str
+    .split(" ")
+    .filter((v, i) => {
+      return v.trim() != "";
+    })
+    .join("_")
+    .split("_")
+    .join("-");
+}
+
 function toLitt(str = "", capitalize = false) {
   const asPkg = str
     .split(" ")
@@ -52,6 +63,18 @@ function toLitt(str = "", capitalize = false) {
     .join("");
 
   return name;
+}
+
+function toUpper(str = "") {
+  return str
+    .split(" ")
+    .filter((v, i) => {
+      return v.trim() != "";
+    })
+    .join("-")
+    .split("-")
+    .join("_")
+    .toUpperCase();
 }
 
 async function setVarsInFile(filePath, vars = {}) {
@@ -549,7 +572,62 @@ async function generateView(viewName) {
   console.log("Generated", path.join("views", `${toLitt(viewName)}.ejs`));
 }
 
+async function generateService(serviceName) {
+  const servicePath = path.join(
+    process.cwd(),
+    "services",
+    `${toFolderName(serviceName)}`,
+    "index.js"
+  );
+  const className = toLitt(serviceName, true);
 
+  if (fs.existsSync(servicePath)) {
+    var prompt = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwrite",
+        message: "Service " + className + " already exists, overwrite?",
+        default: false,
+      },
+    ]);
+
+    if (!prompt.overwrite) return;
+  }
+
+  const serviceTemplatePath = path.join(generatorPath, "service.js");
+  await fs.copy(serviceTemplatePath, servicePath);
+  await setVarsInFile(servicePath, {
+    SERVICE_NAME: className,
+  });
+
+  console.log(
+    "Generated",
+    path.join("services", `${toFolderName(serviceName)}`, "index.js")
+  );
+}
+
+async function generateRoute(routeName) {
+  const routesPath = path.join(process.cwd(), "routes", "routes.js");
+  const key = toUpper(routeName);
+  if (!routeName.startsWith("/")) routeName = "/" + routeName;
+
+  const routes = { [key]: routeName };
+  Object.assign(routes, require(routesPath));
+
+  var routesStr = "";
+  Object.keys(routes).forEach(
+    (k) => (routesStr += `  ${k} : "${routes[k]}",\n`)
+  );
+  fs.writeFileSync(
+    routesPath,
+    `const ROUTES = {
+${routesStr}}
+
+module.exports = ROUTES;
+`,
+    { encoding: "utf-8" }
+  );
+}
 
 async function generate() {
   const choices = {
@@ -608,6 +686,24 @@ async function generate() {
       ]);
 
       generateModel(modelName.modelName);
+      break;
+
+    case choices.svc:
+      var serviceName = await inquirer.prompt([
+        {
+          type: "input",
+          name: "serviceName",
+          message: "Enter service name:",
+          validate: function (input) {
+            if (input.trim() == "") {
+              return "Service name cannot be empty";
+            }
+            return true;
+          },
+        },
+      ]);
+
+      generateService(serviceName.serviceName);
       break;
 
     case choices.vw:
@@ -674,18 +770,104 @@ async function generateMVC(name) {
   await generateView(name);
   await generateController(name);
 }
+
+async function showDBMenu() {
+  const choices = {
+    seed: "Seed to database",
+  };
+  const choice = await inquirer.prompt([
+    {
+      type: "list",
+      name: "action",
+      message: "What do you want to do ?",
+      choices: Object.values(choices),
+    },
+  ]);
+
+  switch (choice.action) {
+    case choices.seed:
+      var params = await inquirer.prompt([
+        {
+          type: "confirm",
+          name: "erase",
+          message:
+            "Clear existing documents before seeding ?",
+          default: false,
+        },
+        {
+          type: "input",
+          name: "only",
+          message: "Collections or files to include in the seed (default to all):",
+        },
+        {
+          type: "input",
+          name: "exclude",
+          message: "Collections or files to ignore during the seed (default to none):",
+        },
+      ]);
+
+      seedDb(params);
+      break;
+
+    default:
+      break;
+  }
+}
+async function seedDb(params) {
+  var { erase, only, exclude } = params;
+  const parsedOnly = [];
+  if (typeof only === "string") only = only.split(" ");
+  for (let o of only) {
+    parsedOnly.push(
+      ...o
+        .split(" ")
+        .join(",")
+        .split(",")
+        .filter((v) => v.trim() != "")
+    );
+  }
+
+  const parsedExclude = [];
+  if (typeof exclude === "string") exclude = exclude.split(" ");
+  for (let o of exclude) {
+    parsedExclude.push(
+      ...o
+        .split(" ")
+        .join(",")
+        .split(",")
+        .filter((v) => v.trim() != "")
+    );
+  }
+
+  const modelsPath = path.join(process.cwd(), "models");
+  const models = fs.readdirSync(modelsPath);
+  for (let modelFile of models) {
+    const modelPath = path.join(process.cwd(), "models", modelFile);
+    require(modelPath);
+  }
+
+  const service = require(path.join(process.cwd(), "services/db"));
+  service.seed({ only: parsedOnly, exclude: parsedExclude, erase }).then(() => {
+    process.exit(1);
+  });
+}
+
 module.exports = {
   toLitt,
   setVarsInFile,
   promptProject,
   generateJWT,
-  generateView,
   setEnvKey,
   getEnvKey,
   deleteEnvKey,
+  seedDb,
+  showDBMenu,
+  generateView,
+  generateService,
   generateController,
   generateMiddleware,
   generateMVC,
   generateModel,
+  generateRoute,
   generate,
 };

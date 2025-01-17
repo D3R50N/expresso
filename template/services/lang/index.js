@@ -68,7 +68,7 @@ class LangService {
 
     let lang = req.query.lang;
     if (!translations[lang]) lang = CookieService.of(req, res).get("lang");
-    if (!translations[lang]) lang = this.getLang();
+    if (!translations[lang]) lang = LangService.getLang();
 
     const translation = translations[lang];
     if (!translation) return next();

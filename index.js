@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { program } = require("commander");
+var pjson = require("./package.json");
 
 const {
   promptProject,
@@ -14,10 +15,14 @@ const {
   generate,
   generateMVC,
   generateMiddleware,
+  generateService,
+  generateRoute,
+  seedDb,
+  showDBMenu,
 } = require("./utils");
 
 program
-  .version("1.0.0")
+  .version(pjson.version)
   .description("Node.js CLI for creating Express projects")
   .name("expresso");
 
@@ -51,7 +56,6 @@ program
   .description("Generate a JWT secret key")
   .action(generateJWT);
 
-  
 program
   .command("generate:mvc <name>")
   .description("Generate a Model-View-Controller")
@@ -62,10 +66,15 @@ program
   .description("Generate a middleware")
   .action(generateMiddleware);
 
-  program
-    .command("generate:controller <controller-name>")
-    .description("Generate a controller")
-    .action(generateController);
+program
+  .command("generate:service <service-name>")
+  .description("Generate a service")
+  .action(generateService);
+
+program
+  .command("generate:controller <controller-name>")
+  .description("Generate a controller")
+  .action(generateController);
 
 program
   .command("generate:model <model-name>")
@@ -80,6 +89,31 @@ program
 program
   .command("generate:route <route-name>")
   .description("Generate a route")
-  .action(generateModel);
+  .action(generateRoute);
+
+program
+  .command("db")
+  .description("Excute action on database")
+  .action(showDBMenu);
+
+program
+  .command("db:seed")
+  .option(
+    "-e, --erase",
+    "Whether to clear existing documents in the collections before seeding",
+    false
+  )
+  .option(
+    "-o, --only <collections...>",
+    "Collections or files that should be used in the seed",
+    []
+  )
+  .option(
+    "-ex, --exclude <collections...>",
+    "Collections or files that should not be ignored in the seed. Can overide the 'only' option.",
+    []
+  )
+  .description("Seed data to db")
+  .action(seedDb);
 
 program.parse(process.argv);

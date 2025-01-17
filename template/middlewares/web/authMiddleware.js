@@ -1,4 +1,4 @@
-const config = require("../../config/config");
+const config = require("../../config");
 const ROUTES = require("../../routes/routes");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/userModel");

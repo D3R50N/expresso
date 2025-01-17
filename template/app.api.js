@@ -1,4 +1,4 @@
-const config = require("./config/config");
+const config = require("./config");
 require("./services").init(config);
 
 const express = require("express");
@@ -13,6 +13,7 @@ const cors = require('cors');
 const UploadService = require("./services/upload");
 const RoutesService = require("./services/routes");
 const LangService = require("./services/lang");
+const DBService = require("./services/db");
 
 
 const app = express();
@@ -38,11 +39,12 @@ app.use(errorHandler.e404);
 app.use(errorHandler.e500);
 
 
-app.listen(config.port, () => {
+app.listen(config.port,async () => {
   
   console.clear();
   
-  if (config.setupDb && config.dbUri) require("./config/db");
+  if (config.setupDb) await DBService.connect();
+  
   const address = config.isDev ? "http://localhost:" : "port ";
   
   RoutesService.log();

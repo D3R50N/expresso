@@ -1,4 +1,4 @@
-const config = require("./config/config");
+const config = require("./config");
 require("./services").init(config);
 
 const express = require("express");
@@ -15,6 +15,7 @@ const UploadService = require("./services/upload");
 const ClientRouterService = require("./services/client-router");
 const LangService = require("./services/lang");
 const RoutesService = require("./services/routes");
+const DBService = require("./services/db");
 
 const app = express();
 
@@ -46,13 +47,14 @@ ClientRouterService.init(app);
 app.use(errorHandler.e404);
 app.use(errorHandler.e500);
 
-app.listen(config.port, () => {
-  // console.clear();
+app.listen(config.port, async () => {
+  console.clear();
 
-  if (config.setupDb && config.dbUri) require("./config/db");
+  if (config.setupDb) await DBService.connect();
+
   const address = config.isDev ? "http://localhost:" : "port ";
 
-  // RoutesService.log();
+  RoutesService.log();
   logger.info(`Server is running on ${address}${config.port}`); //shows in console and saved in log file
 });
 

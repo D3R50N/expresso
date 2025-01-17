@@ -1,11 +1,10 @@
-const { getLang } = require("../lang");
+const LangService = require("../lang");
 
 /**
- * Service for handling date-related operations, such as formatting dates, adding time to dates, 
+ * Service for handling date-related operations, such as formatting dates, adding time to dates,
  * comparing dates, and retrieving date information in different languages.
  */
 class DateService {
-
   /**
    * Language-specific month names.
    * @type {object}
@@ -85,8 +84,8 @@ class DateService {
    * }
    */
   static getDateInfo(timestamp = Date.now()) {
-    const months = this.#monthsLang[getLang()];
-    const days = this.#daysLang[getLang()];
+    const months = this.#monthsLang[LangService.getLang()];
+    const days = this.#daysLang[LangService.getLang()];
     const date = new Date(timestamp);
     const day = days[date.getDay()];
     const month = months[date.getMonth()];

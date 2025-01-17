@@ -121,10 +121,7 @@ class ClientRouterService {
   register({ clientView, route }, dataCallback) {
     if (!clientView) return;
 
-    var ext =
-      clientView.lastIndexOf(".") >= 0
-        ? clientView.slice(clientView.lastIndexOf("."))
-        : "";
+    var ext = path.extname(clientView);
 
     if (!route)
       route = clientView

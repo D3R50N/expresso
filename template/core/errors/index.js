@@ -6,7 +6,7 @@ class CoreError {
     this.req = req;
     this.res = res;
 
-    let errorsFile = require("./fr");
+    let errorsFile = require("./en");
     const lang =
       req.lang ??
       CookieService.of(req, res).get("lang") ??
