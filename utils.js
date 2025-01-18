@@ -853,12 +853,7 @@ async function seedDb(params) {
     );
   }
 
-  const modelsPath = path.join(process.cwd(), "models");
-  const models = fs.readdirSync(modelsPath);
-  for (let modelFile of models) {
-    const modelPath = path.join(process.cwd(), "models", modelFile);
-    require(modelPath);
-  }
+  requireDBModels();
 
   const service = require(path.join(process.cwd(), "services/db"));
   service
@@ -868,17 +863,56 @@ async function seedDb(params) {
     });
 }
 
+function requireDBModels() {
+  const modelsPath = path.join(process.cwd(), "models");
+  const models = fs.readdirSync(modelsPath);
+  for (let modelFile of models) {
+    const modelPath = path.join(process.cwd(), "models", modelFile);
+    require(modelPath);
+  }
+}
+
 async function serveDB(port = 9484) {
   if (isNaN(parseInt(port))) {
     console.log("Port is not valid.");
     return;
   }
+  port = parseInt(port);
+  requireDBModels();
+
   const service = require(path.join(process.cwd(), "services/db"));
   console.log("Starting dashboard server on port", port);
-  service._getCollectionsData().then((c) => {
-    console.log(c);
-    process.exit(1);
+
+  const express = require("express");
+  const app = express();
+
+  app.use(express.static(path.join(__dirname, "dashboard_serve", "public")));
+  app.set("view engine", "ejs");
+  app.set("views", path.join(__dirname, "dashboard_serve", "views"));
+
+  app.get("/", async (req, res) => {
+    const data = await service._getCollections();
+    res.render("index", { data });
   });
+  app.get("/docs/:id", async (req, res) => {
+    const data = await service._getCollectionData(req.params.id);
+    res.render("docs", { data });
+  });
+
+  app.get("/api", async (req, res) => {
+    const data = await service._getCollections();
+    res.json(data);
+  });
+
+   app.get("/api/docs/:id", async (req, res) => {
+    const data = await service._getCollectionData(req.params.id);
+     res.json(data);
+   });
+
+  app.listen(port, () => {
+    console.log("Dashboard server on http://localhost:" + port);
+  });
+  // process.exit(1);
 }
 
 module.exports = {

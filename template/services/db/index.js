@@ -1,22 +1,18 @@
-/**
- * Database Service for managing MongoDB connections and seeding operations.
- * Provides methods to connect to the database and populate collections with seed data.
- */
+const fs = require("fs");
+const path = require("path");
+const mongoose = require("mongoose");
+const Utils = require("../../utils");
+const config = require("../../config");
+const process = require("process");
+
 class DBService {
-  /**
-   * Connects the application to MongoDB.
-   *
-   * @param {boolean} [showConnectionState=true] - Whether to display connection state logs in the console.
-   * @returns {Promise<void>}
-   */
   static async connect(showConnectionState = true) {
     if (!config.dbUri) return;
 
-    if (showConnectionState) {
+    if (showConnectionState)
       mongoose.connection.on("connected", () => {
         console.log("Connected to MongoDB");
       });
-    }
 
     try {
       if (showConnectionState)
@@ -28,29 +24,18 @@ class DBService {
     }
   }
 
-  /**
-   * Seeds the MongoDB collections with data from JSON files in the seeders directory.
-   *
-   * @param {Object} [options={}] - Configuration options for seeding.
-   * @param {string[]} [options.only=[]] - Array of specific seed files or collection names to process.
-   * @param {string[]} [options.exclude=[]] - Array of seed files or collection names to exclude.
-   * @param {boolean} [options.erase=true] - Whether to clear existing documents in the collections before seeding.
-   * @returns {Promise<void>}
-   */
-  static async seed({ only = [], exclude = [], erase = true } = {}) {
+  static async _seed({ only = [], exclude = [], erase = true } = {}) {
     await this.connect(false);
 
     const seedersDir = path.resolve(__dirname, "../../seeders");
     const seedsDir = path.resolve(__dirname, "../../seeds");
 
-    // Ensure seeders and seeds directories exist
     for (let dir of [seedersDir, seedsDir])
       if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 
     const seedLog = {};
 
-    // Filter JSON seed files
-    let files = fs
+    var files = fs
       .readdirSync(seedersDir)
       .filter((file) => file.endsWith(".json"));
 
@@ -72,7 +57,7 @@ class DBService {
       const collectionName = path.basename(file, ".json");
       const filePath = path.join(seedersDir, file);
 
-      let data;
+      var data;
       try {
         data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
       } catch (error) {
@@ -80,7 +65,6 @@ class DBService {
       }
 
       try {
-        // Resolve potential model names for the collection
         const stringData = Utils._string(collectionName);
         function alternativesStringData(data) {
           const alternatives = [data._value, data.singularize()._value];
@@ -95,7 +79,7 @@ class DBService {
           ...alternativesStringData(stringData.capitalize()),
         ];
 
-        let Model;
+        var Model;
 
         for (let possibleName of possibleModelNames) {
           try {
@@ -134,6 +118,41 @@ class DBService {
     );
 
     console.log(`📂 Seed log in ${path.join("seeds", logFileName)}`);
+  }
+
+  static async _getCollections() {
+    await this.connect(false);
+    const db_collections = mongoose.connection.collections;
+    const promise_collections = Object.keys(db_collections).map(async (k) => {
+      const collection = db_collections[k];
+      const name = collection.name;
+      const model = collection.modelName;
+      const count = await mongoose.model(model).countDocuments();
+
+      return {
+        name,
+        model,
+        count,
+      };
+    });
+    const collections = await Promise.all(promise_collections);
+    return collections;
+  }
+  static async _getCollectionData(id) {
+    await this.connect(false);
+    const db_collections = mongoose.connection.collections;
+    const collection = db_collections[id];
+    if (!collection) return null;
+
+    const name = collection.name;
+    const model = collection.modelName;
+    const docs = await mongoose.model(model).find();
+
+    return {
+      name,
+      model,
+      docs,
+    };
   }
 }
 

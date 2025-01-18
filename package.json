@@ -1,6 +1,6 @@
 {
   "name": "expresso-cli",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "main": "index.js",
   "license": "MIT",
   "description": "A simple CLI for generating express.js boilerplate",
@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "commander": "^12.1.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
     "fs-extra": "^11.2.0",
     "inquirer": "^8.0.0"
   }
