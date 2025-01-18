@@ -774,6 +774,7 @@ async function generateMVC(name) {
 async function showDBMenu() {
   const choices = {
     seed: "Seed to database",
+    serve: "Serve database dashboard",
   };
   const choice = await inquirer.prompt([
     {
@@ -790,23 +791,36 @@ async function showDBMenu() {
         {
           type: "confirm",
           name: "erase",
-          message:
-            "Clear existing documents before seeding ?",
+          message: "Clear existing documents before seeding ?",
           default: false,
         },
         {
           type: "input",
           name: "only",
-          message: "Collections or files to include in the seed (default to all):",
+          message:
+            "Collections or files to include in the seed (default to all):",
         },
         {
           type: "input",
           name: "exclude",
-          message: "Collections or files to ignore during the seed (default to none):",
+          message:
+            "Collections or files to ignore during the seed (default to none):",
         },
       ]);
 
       seedDb(params);
+      break;
+
+    case choices.serve:
+      var params = await inquirer.prompt([
+        {
+          type: "number",
+          name: "port",
+          message: "Enter port number for the dashboard server:",
+          default: 9484,
+        },
+      ]);
+      serveDB(params.port);
       break;
 
     default:
@@ -847,7 +861,22 @@ async function seedDb(params) {
   }
 
   const service = require(path.join(process.cwd(), "services/db"));
-  service.seed({ only: parsedOnly, exclude: parsedExclude, erase }).then(() => {
+  service
+    ._seed({ only: parsedOnly, exclude: parsedExclude, erase })
+    .then(() => {
+      process.exit(1);
+    });
+}
+
+async function serveDB(port = 9484) {
+  if (isNaN(parseInt(port))) {
+    console.log("Port is not valid.");
+    return;
+  }
+  const service = require(path.join(process.cwd(), "services/db"));
+  console.log("Starting dashboard server on port", port);
+  service._getCollectionsData().then((c) => {
+    console.log(c);
     process.exit(1);
   });
 }
@@ -861,6 +890,7 @@ module.exports = {
   getEnvKey,
   deleteEnvKey,
   seedDb,
+  serveDB,
   showDBMenu,
   generateView,
   generateService,
