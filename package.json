@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "main": "index.js",
   "license": "MIT",
-  "description": "A simple CLI for generating express.js boilerplate",
+  "description": "A simple CLI for managing express.js project",
   "keywords": [
     "express",
     "cli",
