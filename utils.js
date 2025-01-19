@@ -275,9 +275,13 @@ async function createProject(projectName) {
       if (IS_API_ONLY) await copyPath(templateToCopy);
       fs.removeSync(path.join(projectPath, templateToCopy));
     }
+    console.clear();
     console.log(`Created project at ${projectPath}`);
-
     generateJWT(projectBasePath);
+    console.log("Now you can run :");
+    console.log(`↪ cd ${projectName}`);
+    console.log("↪ npm install");
+    console.log("↪ npm run dev");
   } catch (err) {
     console.error("Error creating project:", err);
   }

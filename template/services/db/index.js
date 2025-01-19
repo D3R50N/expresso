@@ -5,14 +5,24 @@ const Utils = require("../../utils");
 const config = require("../../config");
 const process = require("process");
 
+/**
+ * Database Service for managing MongoDB connections, seeding, and collection data retrieval.
+ */
 class DBService {
+  /**
+   * Connects the application to MongoDB.
+   *
+   * @param {boolean} [showConnectionState=true] - Whether to display connection state logs in the console.
+   * @returns {Promise<void>}
+   */
   static async connect(showConnectionState = true) {
     if (!config.dbUri) return;
 
-    if (showConnectionState)
+    if (showConnectionState) {
       mongoose.connection.on("connected", () => {
         console.log("Connected to MongoDB");
       });
+    }
 
     try {
       if (showConnectionState)
@@ -24,6 +34,16 @@ class DBService {
     }
   }
 
+  /**
+   * Seeds MongoDB collections with data from JSON files.
+   *
+   * @param {Object} [options={}] - Configuration options for seeding.
+   * @param {string[]} [options.only=[]] - Specific seed files or collection names to process.
+   * @param {string[]} [options.exclude=[]] - Seed files or collection names to exclude.
+   * @param {boolean} [options.erase=true] - Whether to clear existing documents in the collections before seeding.
+   * @returns {Promise<void>}
+   * @private
+   */
   static async _seed({ only = [], exclude = [], erase = true } = {}) {
     await this.connect(false);
 
@@ -35,7 +55,7 @@ class DBService {
 
     const seedLog = {};
 
-    var files = fs
+    let files = fs
       .readdirSync(seedersDir)
       .filter((file) => file.endsWith(".json"));
 
@@ -57,7 +77,7 @@ class DBService {
       const collectionName = path.basename(file, ".json");
       const filePath = path.join(seedersDir, file);
 
-      var data;
+      let data;
       try {
         data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
       } catch (error) {
@@ -79,7 +99,7 @@ class DBService {
           ...alternativesStringData(stringData.capitalize()),
         ];
 
-        var Model;
+        let Model;
 
         for (let possibleName of possibleModelNames) {
           try {
@@ -103,7 +123,7 @@ class DBService {
       }
     }
 
-    if (Object.keys(seedLog).length == 0) {
+    if (Object.keys(seedLog).length === 0) {
       console.log("No seed created.");
       return;
     }
@@ -120,6 +140,16 @@ class DBService {
     console.log(`📂 Seed log in ${path.join("seeds", logFileName)}`);
   }
 
+  /**
+   * Retrieves metadata of all MongoDB collections.
+   *
+   * @returns {Promise<Object[]>} - A list of objects containing collection metadata.
+   * Each object contains:
+   *  - `name` (string): The name of the collection.
+   *  - `model` (string): The name of the associated Mongoose model.
+   *  - `count` (number): The number of documents in the collection.
+   * @private
+   */
   static async _getCollections() {
     await this.connect(false);
     const db_collections = mongoose.connection.collections;
@@ -138,6 +168,18 @@ class DBService {
     const collections = await Promise.all(promise_collections);
     return collections;
   }
+
+  /**
+   * Retrieves all documents from a specific MongoDB collection.
+   *
+   * @param {string} id - The name of the collection to retrieve data from.
+   * @returns {Promise<Object|null>} - An object containing:
+   *  - `name` (string): The name of the collection.
+   *  - `model` (string): The name of the associated Mongoose model.
+   *  - `docs` (Array): An array of documents from the collection.
+   * Returns `null` if the collection does not exist.
+   * @private
+   */
   static async _getCollectionData(id) {
     await this.connect(false);
     const db_collections = mongoose.connection.collections;
