@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%=lang%>">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>[##NAME##] - <%= tr.login_t?.toUpperCase() %></title>
-  <link rel="stylesheet" href="/css/expresso.css" />
-  <link rel="stylesheet" href="/css/login.css" />
+  <title>[##NAME##] - <%= tr.login_t?.toUpperCase() %>
+  </title>
+  <link rel="stylesheet" href="/css/lib/bootstrap.css" />
+  <link rel="stylesheet" href="/css/core/expresso.css" />
+  <link rel="stylesheet" href="/css/core/login.css" />
 </head>
 
-<body>
+<body class="<%=theme%>">
   <div class="container">
     <div class="login-register-page">
       <!-- Welcome Text -->
       <div class="welcome-text">
-        <h1><%= tr.login_t?.toUpperCase() %> </h1>
+        <h1>
+          <%= tr.login_t?.toUpperCase() %>
+        </h1>
         <h3>[##NAME##] <%= tr.by %> Expresso</h3>
 
-        <span><%= tr.no_account %> <a href="<%= routes.register %>"><%= tr.sign_up%></a></span>
+        <span>
+          <%= tr.no_account %>
+            <a href="<%= routes.register %>">
+              <%= tr.sign_up%>
+            </a>
+        </span>
       </div>
 
       <form action="<%= routes.login %>" method="post" id="login-form">
         <div class="input-with-icon-left">
           <i class="icon-material-baseline-mail-outline"></i>
-          <input type="text" class="input-text with-border" name="email" id="email" placeholder="<%= tr.email_address%>" required value="<%= locals.body?.email %>" />
+          <input type="text" class="input-text with-border" name="email" id="email" placeholder="<%= tr.email_address%>"
+            required value="<%= locals.body?.email %>" />
         </div>
 
         <div class="input-with-icon-left">
           <i class="icon-material-outline-lock"></i>
-          <input type="password" class="input-text with-border" name="password" id="password" placeholder="<%= tr.password %>" required />
+          <input type="password" class="input-text with-border" name="password" id="password"
+            placeholder="<%= tr.password %>" required />
         </div>
-        <a href="<%= routes.reset_password %>" class="forgot-password"><%= tr.forgot_password%></a>
+        <a href="<%= routes.reset_password %>" class="forgot-password">
+          <%= tr.forgot_password%>
+        </a>
       </form>
 
       <!-- Button -->
@@ -39,21 +52,27 @@
       </button>
 
       <!-- Social Login -->
-      <div class="social-login-separator"><span><%= tr.or%></span></div>
+      <div class="social-login-separator"><span>
+          <%= tr.or%>
+        </span></div>
       <div class="social-login-buttons">
         <button class="facebook-login ripple-effect">
-          <i class="icon-brand-facebook-f"></i> <%= tr.login_facebook%>
+          <i class="icon-brand-facebook-f"></i>
+          <%= tr.login_facebook%>
         </button>
         <button class="google-login ripple-effect">
-          <i class="icon-brand-google-plus-g"></i> <%= tr.login_google%>
+          <i class="icon-brand-google-plus-g"></i>
+          <%= tr.login_google%>
         </button>
       </div>
     </div>
   </div>
 
   <% if (locals.error) { %>
-  <div id="error"><%= error.message %></div>
-  <% } %>
+    <div id="error">
+      <%= error.message %>
+    </div>
+    <% } %>
 </body>
 
 </html>

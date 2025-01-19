@@ -26,6 +26,7 @@ h1 {
   text-transform: uppercase;
   font-weight: bold;
   word-break: break-word;
+  text-align: center;
 }
 
 form {

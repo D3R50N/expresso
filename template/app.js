@@ -16,6 +16,7 @@ const ClientRouterService = require("./services/client-router");
 const LangService = require("./services/lang");
 const RoutesService = require("./services/routes");
 const DBService = require("./services/db");
+const CookieService = require("./services/cookies");
 
 const app = express();
 
@@ -28,8 +29,10 @@ app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
+// Useful services middlewares
 app.use(LangService.tr);
 app.use(RoutesService.router);
+app.use(CookieService.getTheme);
 
 // EJS Template Engine
 app.set("view engine", "ejs");

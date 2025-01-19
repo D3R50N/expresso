@@ -32,7 +32,7 @@ class UploadService {
    * @returns {string} - The route path.
    */
   static getRoutePath(filename) {
-    return this.#routePath.split(":")[0] + filename;
+    return UploadService.#routePath.split(":")[0] + filename;
   }
 
   static #mediasType = {
@@ -187,12 +187,19 @@ class UploadService {
   static getFile(req, res, next) {
     const filename = req.params.filename;
     if (!filename) return res.sendStatus(400);
-    const p = this.file(filename).path;
+    const p = UploadService.file(filename).path;
 
     if (!fs.existsSync(p)) return res.sendStatus(404);
     return res.sendFile(p);
   }
 
+  /**
+   * Middleware to handle file upload.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
+   */
   static putFile(req, res, next) {
     const files = [];
     for (let file of req.files ?? []) {
@@ -209,8 +216,12 @@ class UploadService {
    */
   static router() {
     const r = require("express").Router();
-    r.get(this.#routePath, this.getFile);
-    r.post(this.#routePutPath, this.middleware.any);
+    r.get(this.#routePath, UploadService.getFile);
+    r.post(
+      this.#routePutPath,
+      UploadService.middleware.any,
+      UploadService.putFile
+    );
     return r;
   }
 }

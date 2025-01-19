@@ -106,6 +106,7 @@ exports.resetPassword = async (req, res) => {
 
     const user = await User.findById(link.userId);
 
+    await LinkService.expire(link);
     await UserService.of(user).resetPassword(req.body.password);
     return res.redirect(ROUTES.BASE);
   } catch (err) {

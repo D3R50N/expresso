@@ -1,28 +1,32 @@
 <!DOCTYPE html>
+<html lang="<%=lang%>">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Expresso - [##NAME##]</title>
-  <link rel="stylesheet" href="/css/expresso.css">
-  <link rel="stylesheet" href="/css/home.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <link rel="stylesheet" href="/css/account.css">
-
+  <link rel="stylesheet" href="/css/lib/bootstrap.css">
+  <link rel="stylesheet" href="/css/core/expresso.css">
+  <link rel="stylesheet" href="/css/core/account.css">
 </head>
 
-<body>
+<body class="<%=theme%>">
   <div class="container">
     <h1 style="text-transform: none; font-weight: normal;"> <%- tr.need_verify %> </h1>
     <form action="<%= routes.verify_account %>" id="form" method="get"></form>
-    <button class="button button-sliding-icon ripple-effect margin-top-10" type="submit" form="form"><%= tr.resend_mail %> <i class="icon-material-outline-arrow-right-alt"></i></button>
+    <button class="button button-sliding-icon ripple-effect margin-top-10" type="submit" form="form">
+      <%= tr.resend_mail %> <i class="icon-material-outline-arrow-right-alt"></i>
+    </button>
 
     <% if (locals.email_sent!=null) { %>
-    <div id="message" class="<%= locals.email_sent && "sent" %>"> <%= locals.message%> </div>
-    <% } %>
+      <div id="message" class="<%= locals.email_sent && " sent" %>"> <%= locals.message%>
+      </div>
+      <% } %>
 
   </div>
-
+  <a href="/logout" id="btn_logout">
+    <%= tr.logout?.toUpperCase() %> ↪
+  </a>
 </body>
 
 </html>

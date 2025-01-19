@@ -5,7 +5,6 @@ const AppService = require("..");
  * Provides methods to get, set, and clear cookies, as well as to calculate cookie expiration times.
  */
 class CookieService {
-
   /**
    * Configuration settings for the cookie service.
    * @type {object}
@@ -86,6 +85,22 @@ class CookieService {
       default:
         return num;
     }
+  }
+
+  /**
+   * Middleware to get theme from request or cookies and set theme for views
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {function} next - The next middleware function.
+   */
+  static getTheme(req, res, next) {
+    let theme = req.query.theme;
+    if (!theme) theme = CookieService.of(req, res).get("theme");
+    if (!theme) theme = "dark";
+    CookieService.of(req, res).set("theme", theme);
+
+    res.locals.theme = theme;
+    next();
   }
 }
 
