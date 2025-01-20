@@ -32,18 +32,20 @@ program
   .description("Create a new project")
   .action(promptProject);
 
+program.command("env").description("Get all env keys").action(getEnvKey);
+
 program
-  .command("env-set <key> [value]")
+  .command("env:get <key>")
+  .description("Get a env key value")
+  .action(getEnvKey);
+
+program
+  .command("env:set <key> [value]")
   .description("Generate a env key value pair")
   .action(setEnvKey);
 
 program
-  .command("env-get [key]")
-  .description("Get a env key value or all keys")
-  .action(getEnvKey);
-
-program
-  .command("env-delete <key>")
+  .command("env:delete <key>")
   .description("Delete a env key value")
   .action(deleteEnvKey);
 
@@ -63,21 +65,6 @@ program
   .action(generateMVC);
 
 program
-  .command("generate:middleware <middleware-name>")
-  .description("Generate a middleware")
-  .action(generateMiddleware);
-
-program
-  .command("generate:service <service-name>")
-  .description("Generate a service")
-  .action(generateService);
-
-program
-  .command("generate:controller <controller-name>")
-  .description("Generate a controller")
-  .action(generateController);
-
-program
   .command("generate:model <model-name>")
   .description("Generate a model")
   .action(generateModel);
@@ -88,13 +75,28 @@ program
   .action(generateView);
 
 program
+  .command("generate:controller <controller-name>")
+  .description("Generate a controller")
+  .action(generateController);
+
+program
+  .command("generate:service <service-name>")
+  .description("Generate a service")
+  .action(generateService);
+
+program
+  .command("generate:middleware <middleware-name>")
+  .description("Generate a middleware")
+  .action(generateMiddleware);
+
+program
   .command("generate:route <route-name>")
   .description("Generate a route")
   .action(generateRoute);
 
 program
   .command("db")
-  .description("Excute action on database")
+  .description("Excute an action on database")
   .action(showDBMenu);
 
 program

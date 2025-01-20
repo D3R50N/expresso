@@ -387,7 +387,7 @@ function getEnvKey(key) {
       .split("=")[1]
       ?.trim();
   }
-
+  if (typeof key == "object") key = null;
   console.log(key ? obj[key.toUpperCase()] ?? "Key not found" : obj);
 }
 function deleteEnvKey(key) {
