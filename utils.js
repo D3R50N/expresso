@@ -778,7 +778,7 @@ async function generateMVC(name) {
 async function showDBMenu() {
   const choices = {
     seed: "Seed to database",
-    serve: "Serve database dashboard",
+    serve: "Serve a read-only database dashboard ",
   };
   const choice = await inquirer.prompt([
     {

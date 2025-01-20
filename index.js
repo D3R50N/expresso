@@ -117,6 +117,9 @@ program
   .description("Seed data to db")
   .action(seedDb);
 
-program.command("db:serve [port]").description("Serve a dashboard server to database").action(serveDB);
+program
+  .command("db:serve [port]")
+  .description("Create a read-only dashboard server to database")
+  .action(serveDB);
 
 program.parse(process.argv);
