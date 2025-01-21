@@ -34,16 +34,19 @@ class AuthService {
    *
    * @param {object} req - The HTTP request object, containing cookies and headers.
    * @param {boolean} [withStripe=false] - Whether to fetch Stripe subscription details for the user.
+   * @param {boolean} [isBearer=false] - Whether to get token from authorization header.
    * @returns {Promise<object|null>} The authenticated user object, including Stripe data if requested, or `null` if authentication fails.
    */
-  static async authUser(req, withStripe = false) {
-    const token = CookieService.of(req, null).get(this.#config.authToken);
+  static async authUser(req, { withStripe = false, isBearer = false }) {
+    const token = isBearer
+      ? req.headers.authorization.replace("Bearer ", "")
+      : CookieService.of(req, null).get(this.#config.authToken);
 
     if (!token) {
       return null;
     }
     try {
-      const decoded = await jwt.verify(token, this.#config.jwtSecret);
+      const decoded = jwt.verify(token, this.#config.jwtSecret);
       req.headers.authorization = token;
       req.user = decoded;
       const user = await User.findById(req.user.userId);
@@ -52,14 +55,11 @@ class AuthService {
       if (!withStripe) return user;
 
       return await PaymentService.userWithStripe(user);
-      
     } catch (err) {
       console.log(err);
       return null;
     }
   }
-
-  
 }
 
 module.exports = AuthService;

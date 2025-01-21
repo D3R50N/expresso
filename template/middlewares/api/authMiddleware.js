@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
 
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
-    return errors.json(errors.code.AUTH_TOKEN_MISSSING);
+    return errors.json(errors.code.AUTH_TOKEN_MISSING);
   }
 
   try {

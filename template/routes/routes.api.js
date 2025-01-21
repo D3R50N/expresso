@@ -11,6 +11,8 @@ const ROUTES = {
   DOCS: "/api-docs",
 
   USERS: "/users",
+  USER: "/user",
+
   FIND: "/:id",
   GET: "/get",
   GET_ATTRIBUTE: "/:attr",

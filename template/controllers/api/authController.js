@@ -65,3 +65,16 @@ exports.register = async (req, res) => {
     else errors.json(errors.code.USER_NOT_CREATED);
   }
 };
+
+exports.user = async (req, res) => {
+  const errors = CoreError.from(req, res);
+  try {
+    const user = await AuthService.authUser(req, { isBearer: true });
+    user.password = "***";
+    res.status(200).json(user);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: err.message, code: errors.code.SERVER_ERROR.code });
+  }
+};
