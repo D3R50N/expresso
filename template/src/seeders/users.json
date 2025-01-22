@@ -1,5 +1,6 @@
 [
   {
+    "accountVerified": true,
     "email": "expresso@example.com",
     "name": "Expresso Admin",
     "password": "admin"
