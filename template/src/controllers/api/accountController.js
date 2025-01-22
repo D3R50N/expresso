@@ -1,4 +1,4 @@
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 const {
   VerificationLink,
   PasswordResetLink,
@@ -32,7 +32,7 @@ gap: 1em; height: 100vh; max-width: 300px;  margin: 0 auto; justify-content: cen
 };
 
 exports.sendVerificationMail = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const user = await User.findById(req.body.id);
 
@@ -54,7 +54,7 @@ exports.sendVerificationMail = async (req, res) => {
 };
 
 exports.verifyAccount = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
 
   try {
     const link = await VerificationLink.findOne({ path: req.params.id });
@@ -82,7 +82,7 @@ exports.verifyAccount = async (req, res) => {
 };
 
 exports.sendPasswordResetMail = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const email = req.body.email;
     const user = await User.findOne({ email });
@@ -101,7 +101,7 @@ exports.sendPasswordResetMail = async (req, res) => {
 };
 
 exports.passwordResetHTML = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const link = await PasswordResetLink.findOne({ path: req.params.id });
 
@@ -120,7 +120,7 @@ exports.passwordResetHTML = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const link = await PasswordResetLink.findOne({ path: req.params.id });
 

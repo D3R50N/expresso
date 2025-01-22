@@ -6,7 +6,7 @@ const MailService = require("../../services/mail");
 const CookieService = require("../../services/cookies");
 const UploadService = require("../../services/upload");
 const AppService = require("../../services");
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 
 exports.index = async (req, res) => {
   try {
@@ -19,7 +19,7 @@ exports.index = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const user = new User(req.body);
 

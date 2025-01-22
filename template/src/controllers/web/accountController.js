@@ -1,4 +1,4 @@
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 const {
   VerificationLink,
   PasswordResetLink,
@@ -96,7 +96,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     if (!req.body.password || req.body.password.length < 6) {
-      const errors = CoreError.from(req, res);
+      const errors = Errors.from(req, res);
       return res.render("passwordReset", {
         message: errors.code.PASSWORD_LENGTH.message,
         email_sent: false,

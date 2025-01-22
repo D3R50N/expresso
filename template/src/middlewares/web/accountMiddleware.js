@@ -1,13 +1,12 @@
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 const ROUTES = require("../../routes/routes");
 const AppService = require("../../services");
 const AuthService = require("../../services/auth");
 const CookieService = require("../../services/cookies");
-const LangService = require("../../services/lang");
 
 module.exports = async (req, res, next) => {
   try {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
 
     const user = await AuthService.authUser(req);
     if (!user) {

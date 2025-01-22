@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const AppService = require("../../services");
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 
 module.exports = (req, res, next) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
 
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {

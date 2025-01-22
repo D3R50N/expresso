@@ -1,10 +1,10 @@
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 const User = require("../../models/userModel");
 const AuthService = require("../../services/auth");
 const UploadService = require("../../services/upload");
 
 exports.login = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const { email, password } = req.body;
 
@@ -35,7 +35,7 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
 
   try {
     const user = new User(req.body);
@@ -60,14 +60,14 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (err) {
-    const errors = CoreError.from(req, res);
+    const errors = Errors.from(req, res);
     if (err.code === 11000) errors.json(errors.code.USER_EXISTS);
     else errors.json(errors.code.USER_NOT_CREATED);
   }
 };
 
 exports.user = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const user = await AuthService.authUser(req, { isBearer: true });
     user.password = "***";

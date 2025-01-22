@@ -1,7 +1,7 @@
-const CookieService = require("../../services/cookies");
-const LangService = require("../../services/lang");
+const CookieService = require("../../src/services/cookies");
+const LangService = require("../../src/services/lang");
 
-class CoreError {
+class Errors {
   constructor(req, res) {
     this.req = req;
     this.res = res;
@@ -20,7 +20,7 @@ class CoreError {
   }
 
   static from(req, res) {
-    return new CoreError(req, res);
+    return new Errors(req, res);
   }
 
   json(code = this.code.SERVER_ERROR) {
@@ -28,4 +28,4 @@ class CoreError {
   }
 }
 
-module.exports = CoreError;
+module.exports = Errors;

@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
 const Utils = require("../../utils");
-const config = require("../../config");
+const config = require("../../../config");
 const process = require("process");
 
 /**
@@ -48,7 +48,7 @@ class DBService {
     await this.connect(false);
 
     const seedersDir = path.resolve(__dirname, "../../seeders");
-    const seedsDir = path.resolve(__dirname, "../../seeds");
+    const seedsDir = path.resolve(__dirname, "../../../seeds");
 
     for (let dir of [seedersDir, seedsDir])
       if (!fs.existsSync(dir)) fs.mkdirSync(dir);

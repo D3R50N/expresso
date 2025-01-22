@@ -73,3 +73,9 @@ a[href="/logout"] {
   right: 20px;
   font-weight: bold;
 }
+
+.btn {
+  border: 1px solid var(--expresso-text);
+  padding: .6em 2em;
+  border-radius: .3em;
+}

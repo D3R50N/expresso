@@ -1,8 +1,8 @@
 const User = require("../../models/userModel");
-const CoreError = require("../../core/errors");
+const Errors = require("../../../config/errors");
 
 exports.getAllUsers = async (req, res) => {
-    const errors = CoreError.from(req, res);
+    const errors = Errors.from(req, res);
   try {
     const limit = req.query.limit;
 
@@ -18,7 +18,7 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUserById = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const user = await User.findById(req.params.id);
     res.status(200).json(user);
@@ -28,7 +28,7 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.getUserAttribute = async (req, res) => {
-  const errors = CoreError.from(req, res);
+  const errors = Errors.from(req, res);
   try {
     const user = await User.findById(req.params.id);
     if (!user[req.params.attr]) errors.json(errors.code.USER_ATTR_NOT_FOUND);

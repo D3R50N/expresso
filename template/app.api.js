@@ -1,20 +1,19 @@
 const config = require("./config");
-require("./services").init(config);
+require("./src/services").init(config);
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const api_routes = require("./routes/api");
-const logger = require("./utils/logger");
-const errorHandler = require("./middlewares/errorHandler");
-const ROUTES = require("./routes/routes");
-const cors = require('cors');
+const api_routes = require("./src/routes/api");
+const logger = require("./src/utils/logger");
+const errorHandler = require("./src/middlewares/errorHandler");
+const ROUTES = require("./src/routes/routes");
+const cors = require("cors");
 
-const UploadService = require("./services/upload");
-const RoutesService = require("./services/routes");
-const LangService = require("./services/lang");
-const DBService = require("./services/db");
-
+const UploadService = require("./src/services/upload");
+const LangService = require("./src/services/lang");
+const RoutesService = require("./src/services/routes");
+const DBService = require("./src/services/db");
 
 const app = express();
 

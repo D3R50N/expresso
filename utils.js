@@ -7,21 +7,21 @@ const generatorPath = path.join(__dirname, "generator");
 const templatePath = path.join(__dirname, "template");
 
 const notApiPaths = [
-  "controllers/web",
-  "controllers/client",
-  "middlewares/web",
-  "routes/web",
-  "views",
+  "src/controllers/web",
+  "src/controllers/client",
+  "src/middlewares/web",
+  "src/routes/web",
+  "src/views",
   "public",
-  "middlewares/errorHandler.js",
+  "src/middlewares/errorHandler.js",
   "app.js",
-  "routes/routes.js",
+  "src/routes/routes.js",
 ];
 
 const apiPaths = [
-  "middlewares/errorHandler.api.js",
+  "src/middlewares/errorHandler.api.js",
   "app.api.js",
-  "routes/routes.api.js",
+  "src/routes/routes.api.js",
 ];
 
 const namesMap = {
@@ -436,6 +436,7 @@ async function generateMiddleware(middlewareName) {
 
   const middlewarePath = path.join(
     process.cwd(),
+    "src",
     "middlewares",
     middlewareType,
     `${middlewareName}.js`
@@ -462,7 +463,7 @@ async function generateMiddleware(middlewareName) {
 
   console.log(
     "Generated",
-    path.join("middlewares", middlewareType, middlewareName + ".js")
+    path.join("src", "middlewares", middlewareType, middlewareName + ".js")
   );
 }
 
@@ -483,6 +484,7 @@ async function generateController(controllerName) {
 
   const controllerPath = path.join(
     process.cwd(),
+    "src",
     "controllers",
     controllerType,
     `${controllerName}.js`
@@ -509,13 +511,14 @@ async function generateController(controllerName) {
 
   console.log(
     "Generated",
-    path.join("controllers", controllerType, controllerName + ".js")
+    path.join("src", "controllers", controllerType, controllerName + ".js")
   );
 }
 
 async function generateModel(modelName) {
   const modelPath = path.join(
     process.cwd(),
+    "src",
     "models",
     `${toLitt(modelName + " model")}.js`
   );
@@ -545,12 +548,17 @@ async function generateModel(modelName) {
 
   console.log(
     "Generated",
-    path.join("models", `${toLitt(modelName + " model")}.js`)
+    path.join("src", "models", `${toLitt(modelName + " model")}.js`)
   );
 }
 
 async function generateView(viewName) {
-  const viewPath = path.join(process.cwd(), "views", `${toLitt(viewName)}.ejs`);
+  const viewPath = path.join(
+    process.cwd(),
+    "src",
+    "views",
+    `${toLitt(viewName)}.ejs`
+  );
 
   if (fs.existsSync(viewPath)) {
     var prompt = await inquirer.prompt([
@@ -573,7 +581,10 @@ async function generateView(viewName) {
       .replaceAll("/", " "),
   });
 
-  console.log("Generated", path.join("views", `${toLitt(viewName)}.ejs`));
+  console.log(
+    "Generated",
+    path.join("src", "views", `${toLitt(viewName)}.ejs`)
+  );
 }
 
 async function generateService(serviceName) {
@@ -606,12 +617,12 @@ async function generateService(serviceName) {
 
   console.log(
     "Generated",
-    path.join("services", `${toFolderName(serviceName)}`, "index.js")
+    path.join("src", "services", `${toFolderName(serviceName)}`, "index.js")
   );
 }
 
 async function generateRoute(routeName) {
-  const routesPath = path.join(process.cwd(), "routes", "routes.js");
+  const routesPath = path.join(process.cwd(), "src", "routes", "routes.js");
   const key = toUpper(routeName);
   if (!routeName.startsWith("/")) routeName = "/" + routeName;
 
@@ -859,7 +870,7 @@ async function seedDb(params) {
 
   requireDBModels();
 
-  const service = require(path.join(process.cwd(), "services/db"));
+  const service = require(path.join(process.cwd(), "src", "services/db"));
   service
     ._seed({ only: parsedOnly, exclude: parsedExclude, erase })
     .then(() => {
@@ -868,10 +879,10 @@ async function seedDb(params) {
 }
 
 function requireDBModels() {
-  const modelsPath = path.join(process.cwd(), "models");
+  const modelsPath = path.join(process.cwd(), "src", "models");
   const models = fs.readdirSync(modelsPath);
   for (let modelFile of models) {
-    const modelPath = path.join(process.cwd(), "models", modelFile);
+    const modelPath = path.join(modelsPath, modelFile);
     require(modelPath);
   }
 }
@@ -884,7 +895,7 @@ async function serveDB(port = 9484) {
   port = parseInt(port);
   requireDBModels();
 
-  const service = require(path.join(process.cwd(), "services/db"));
+  const service = require(path.join(process.cwd(), "src", "services/db"));
   console.log("Starting dashboard server on port", port);
 
   const express = require("express");

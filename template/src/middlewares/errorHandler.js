@@ -1,10 +1,10 @@
-const CoreError = require("../core/errors");
+const Errors = require("../../config/errors");
 const AppService = require("../services");
 
 const config = AppService.config;
 
 exports.e500 = (req, res, next) => {
-  const error = CoreError.from(req, res);
+  const error = Errors.from(req, res);
   res.status(500).render("error", {
     title: "500",
     devMode: config.isDev,
@@ -16,7 +16,7 @@ exports.e500 = (req, res, next) => {
 };
 
 exports.e404 = (req, res, next) => {
-  const error = CoreError.from(req, res);
+  const error = Errors.from(req, res);
   res.status(404).render("error", {
     title: "404",
     devMode: config.isDev,
@@ -28,7 +28,7 @@ exports.e404 = (req, res, next) => {
 };
 
 exports.e400 = (req, res, next) => {
-  const error = CoreError.from(req, res);
+  const error = Errors.from(req, res);
   res.status(400).render("error", {
     title: "400",
     devMode: config.isDev,

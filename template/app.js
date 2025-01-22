@@ -1,22 +1,23 @@
 const config = require("./config");
-require("./services").init(config);
+require("./src/services").init(config);
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const api_routes = require("./routes/api");
-const web_routes = require("./routes/web");
-const logger = require("./utils/logger");
-const errorHandler = require("./middlewares/errorHandler");
-const ROUTES = require("./routes/routes");
+const api_routes = require("./src/routes/api");
+const web_routes = require("./src/routes/web");
+const logger = require("./src/utils/logger");
+const errorHandler = require("./src/middlewares/errorHandler");
+const ROUTES = require("./src/routes/routes");
 const cors = require("cors");
 const path = require("path");
-const UploadService = require("./services/upload");
-const ClientRouterService = require("./services/client-router");
-const LangService = require("./services/lang");
-const RoutesService = require("./services/routes");
-const DBService = require("./services/db");
-const CookieService = require("./services/cookies");
+
+const UploadService = require("./src/services/upload");
+const ClientRouterService = require("./src/services/client-router");
+const LangService = require("./src/services/lang");
+const RoutesService = require("./src/services/routes");
+const DBService = require("./src/services/db");
+const CookieService = require("./src/services/cookies");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(CookieService.getTheme);
 
 // EJS Template Engine
 app.set("view engine", "ejs");
+app.set("views", "src/views");
 
 // Routes
 app.use(UploadService.router());
