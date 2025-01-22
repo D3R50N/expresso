@@ -1,11 +1,4 @@
 {
-  "name": "[##PKG_NAME##]",
-  "version": "1.0.0",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js --config nodemon.json"
-  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -14,7 +7,6 @@
     "dotenv": "^8.6.0",
     "ejs": "^3.1.10",
     "express": "^4.17.1",
-    "express-list-routes": "^1.2.1",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^8.9.5",
     "multer": "^1.4.5-lts.1",
@@ -24,5 +16,12 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21"
-  }
+  },
+  "main": "app.js",
+  "name": "[##PKG_NAME##]",
+  "scripts": {
+    "dev": "nodemon app.js --config nodemon.json",
+    "start": "node app.js"
+  },
+  "version": "1.0.0"
 }
