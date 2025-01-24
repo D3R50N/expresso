@@ -47,7 +47,7 @@ class LangService {
         const tr = res.locals.tr[key];
         res.locals.tr[key] = tr
           .replaceAll("\\$", "$$")
-          .replaceAll("$" + v, vars[v])
+          .replaceAll(`\${${v}}`, vars[v])
           .replaceAll("$$", "$");
       }
     }

@@ -17,7 +17,8 @@ const ClientRouterService = require("./src/services/client-router");
 const LangService = require("./src/services/lang");
 const RoutesService = require("./src/services/routes");
 const DBService = require("./src/services/db");
-const CookieService = require("./src/services/cookies");
+const Limiter = require("./src/middlewares/limiter");
+const ThemeMode = require("./src/middlewares/themeMode");
 
 const app = express();
 
@@ -30,10 +31,12 @@ app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
-// Useful services middlewares
+// Useful middlewares
 app.use(LangService.tr);
 app.use(RoutesService.router);
-app.use(CookieService.getTheme);
+
+app.use(Limiter); // Limit user request frequency
+app.use(ThemeMode); // get user current theme mode
 
 // EJS Template Engine
 app.set("view engine", "ejs");

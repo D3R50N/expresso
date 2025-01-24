@@ -31,117 +31,124 @@ gap: 1em; height: 100vh; max-width: 300px;  margin: 0 auto; justify-content: cen
   else res.send(html);
 };
 
-exports.sendVerificationMail = async (req, res) => {
-  const errors = Errors.from(req, res);
-  try {
-    const user = await User.findById(req.body.id);
+class ApiAccountController {
 
-    if (!user) {
-      return errors.json(errors.code.USER_NOT_FOUND);
+  static async sendVerificationMail(req, res) {
+    const errors = Errors.from(req, res);
+    try {
+      const user = await User.findById(req.body.id);
+
+      if (!user) {
+        return errors.json(errors.code.USER_NOT_FOUND);
+      }
+
+      if (user.accountVerified) {
+        return errors.json(errors.code.USER_NOT_UPDATED);
+      }
+
+      const email_sent = await UserService.of(user).sendVerificationEmail(true);
+
+      return res.json({ sent: email_sent });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
     }
-
-    if (user.accountVerified) {
-      return errors.json(errors.code.USER_NOT_UPDATED);
-    }
-
-    const email_sent = await UserService.of(user).sendVerificationEmail(true);
-
-    return res.json({ sent: email_sent });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
   }
-};
 
-exports.verifyAccount = async (req, res) => {
-  const errors = Errors.from(req, res);
+  static async verifyAccount(req, res) {
+    const errors = Errors.from(req, res);
 
-  try {
-    const link = await VerificationLink.findOne({ path: req.params.id });
+    try {
+      const link = await VerificationLink.findOne({ path: req.params.id });
 
-    if (!link) {
-      return errors.json(errors.code.PAGE_NOT_FOUND);
-    }
+      if (!link) {
+        return errors.json(errors.code.PAGE_NOT_FOUND);
+      }
 
-    const user = await User.findById(link.userId);
+      const user = await User.findById(link.userId);
 
-    if (!user) {
-      return errors.json(errors.code.USER_NOT_FOUND);
-    }
+      if (!user) {
+        return errors.json(errors.code.USER_NOT_FOUND);
+      }
 
-    if (await LinkService.verify(link, user.id)) {
-      await UserService.of(user).verifyUser();
-      return res.send("OK");
-    }
+      if (await LinkService.verify(link, user.id)) {
+        await UserService.of(user).verifyUser();
+        return res.send("OK");
+      }
 
-    return res.status(400).json("Invalid link");
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-};
-
-exports.sendPasswordResetMail = async (req, res) => {
-  const errors = Errors.from(req, res);
-  try {
-    const email = req.body.email;
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return errors.json(errors.code.USER_NOT_FOUND);
-    }
-
-    const email_sent = await UserService.of(user).sendPasswordResetEmail(true);
-
-    return res.json({ sent: email_sent });
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
-  }
-};
-
-exports.passwordResetHTML = async (req, res) => {
-  const errors = Errors.from(req, res);
-  try {
-    const link = await PasswordResetLink.findOne({ path: req.params.id });
-
-    if (!link) {
-      return errors.json(errors.code.PAGE_NOT_FOUND);
-    }
-
-    if (LinkService.hasExpired(link))
       return res.status(400).json("Invalid link");
-
-    return renderPasswordResetForm(link, res);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+    }
   }
-};
 
-exports.resetPassword = async (req, res) => {
-  const errors = Errors.from(req, res);
-  try {
-    const link = await PasswordResetLink.findOne({ path: req.params.id });
+  static async sendPasswordResetMail(req, res) {
+    const errors = Errors.from(req, res);
+    try {
+      const email = req.body.email;
+      const user = await User.findOne({ email });
 
-    if (!link) {
-      return renderPasswordResetForm(link, res, errors.code.PAGE_NOT_FOUND);
+      if (!user) {
+        return errors.json(errors.code.USER_NOT_FOUND);
+      }
+
+      const email_sent = await UserService.of(user).sendPasswordResetEmail(
+        true
+      );
+
+      return res.json({ sent: email_sent });
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
     }
-
-    if (!req.body.password || req.body.password.length < 6) {
-      return renderPasswordResetForm(link, res, errors.code.PASSWORD_LENGTH);
-    }
-
-    const user = await User.findById(link.userId);
-
-    if (await LinkService.verify(link, user.id)) {
-      await UserService.of(user).resetPassword(req.body.password);
-      return res.send("OK");
-    }
-
-    return res.status(400).json("Invalid link");
-  } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err.message });
   }
-};
+
+  static async passwordResetHTML(req, res) {
+    const errors = Errors.from(req, res);
+    try {
+      const link = await PasswordResetLink.findOne({ path: req.params.id });
+
+      if (!link) {
+        return errors.json(errors.code.PAGE_NOT_FOUND);
+      }
+
+      if (LinkService.hasExpired(link))
+        return res.status(400).json("Invalid link");
+
+      return renderPasswordResetForm(link, res);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+    }
+  }
+
+  static async resetPassword(req, res) {
+    const errors = Errors.from(req, res);
+    try {
+      const link = await PasswordResetLink.findOne({ path: req.params.id });
+
+      if (!link) {
+        return renderPasswordResetForm(link, res, errors.code.PAGE_NOT_FOUND);
+      }
+
+      if (!req.body.password || req.body.password.length < 6) {
+        return renderPasswordResetForm(link, res, errors.code.PASSWORD_LENGTH);
+      }
+
+      const user = await User.findById(link.userId);
+
+      if (await LinkService.verify(link, user.id)) {
+        await UserService.of(user).resetPassword(req.body.password);
+        return res.send("OK");
+      }
+
+      return res.status(400).json("Invalid link");
+    } catch (err) {
+      console.log(err);
+      res.status(400).json({ error: err.message });
+    }
+  }
+}
+
+module.exports = ApiAccountController;

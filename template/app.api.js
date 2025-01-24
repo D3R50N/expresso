@@ -14,6 +14,7 @@ const UploadService = require("./src/services/upload");
 const LangService = require("./src/services/lang");
 const RoutesService = require("./src/services/routes");
 const DBService = require("./src/services/db");
+const Limiter = require("./src/middlewares/limiter");
 
 const app = express();
 
@@ -25,10 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 app.use(LangService.tr);
 app.use(RoutesService.router);
 
-// Routes
+app.use(Limiter); // Limit user request frequency
 
+
+// Routes
 app.use(UploadService.router());
-app.use(ROUTES.API_BASE, api_routes);
+app.use(ROUTES.API_BASE, Limiter, api_routes);
 
 // Services
 RoutesService.getAppRoutes(app);
@@ -38,14 +41,14 @@ app.use(errorHandler.e404);
 app.use(errorHandler.e500);
 
 
-app.listen(config.port,async () => {
-  
+app.listen(config.port, async () => {
+
   console.clear();
-  
+
   if (config.setupDb) await DBService.connect();
-  
+
   const address = config.isDev ? "http://localhost:" : "port ";
-  
+
   RoutesService.log();
   logger.info(`Server is running on ${address}${config.port}`); //shows in console and saved in log file
 });

@@ -490,12 +490,14 @@ async function generateController(controllerName) {
     `${controllerName}.js`
   );
 
+  var suffix = controllerType == "api" ? "Api" : "";
+
   if (fs.existsSync(controllerPath)) {
     var prompt = await inquirer.prompt([
       {
         type: "confirm",
         name: "overwrite",
-        message: "Controller " + controllerName + " already exists, overwrite?",
+        message: "Controller " + suffix + controllerName + " already exists, overwrite?",
         default: false,
       },
     ]);
@@ -506,7 +508,7 @@ async function generateController(controllerName) {
   const controllerTemplatePath = path.join(generatorPath, "controller.js");
   await fs.copy(controllerTemplatePath, controllerPath);
   await setVarsInFile(controllerPath, {
-    CONTROLLER_NAME: toLitt(controllerName, true),
+    CONTROLLER_NAME: suffix + toLitt(controllerName, true),
   });
 
   console.log(
@@ -919,10 +921,10 @@ async function serveDB(port = 9484) {
     res.json(data);
   });
 
-   app.get("/api/docs/:id", async (req, res) => {
+  app.get("/api/docs/:id", async (req, res) => {
     const data = await service._getCollectionData(req.params.id);
-     res.json(data);
-   });
+    res.json(data);
+  });
 
   app.listen(port, () => {
     console.log("Dashboard server on http://localhost:" + port);
