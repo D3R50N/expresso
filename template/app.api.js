@@ -26,12 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 app.use(LangService.tr);
 app.use(RoutesService.router);
 
-app.use(Limiter); // Limit user request frequency
+app.use(Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) })); // Limit users to 5 requests each 2s
 
 
 // Routes
 app.use(UploadService.router());
-app.use(ROUTES.API_BASE, Limiter, api_routes);
+app.use(ROUTES.API_BASE, api_routes);
 
 // Services
 RoutesService.getAppRoutes(app);

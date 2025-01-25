@@ -1,3 +1,5 @@
+const CookieService = require("../services/cookies");
+
 /**
   * Middleware to get theme from request or cookies and set theme for views
   * @param {object} req - The request object.

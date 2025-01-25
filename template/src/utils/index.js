@@ -48,6 +48,17 @@ class Utils {
     return parseInt(Math.random() * (max - min)) + min;
   }
 
+  static toMs({ d, h, m, s, ms }) {
+    d = d ?? 0;
+    h = h ?? 0;
+    m = m ?? 0;
+    s = s ?? 0;
+    ms = ms ?? 0;
+
+    const stamp = ms + (1000 * s) + (60 * 1000 * m) + (60 * 60 * 1000 * h) + (24 * 60 * 60 * 1000 * d)
+    return stamp;
+  }
+
   static randomElement(array) {
     if (typeof array == "string") array = array.split("");
 

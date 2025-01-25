@@ -1,45 +1,56 @@
 const LangService = require("../services/lang");
+const Utils = require("../utils");
 
-const MAX_LIMIT = 10;
-const requests = {};
-const TIME_DELAY = 1 * 60 * 1000; // 1 min
+// 100 requests per min
+const DEFAULT_MAX_LIMIT = 100;
+const DEFAULT_TIME_DELAY = Utils.toMs({ m: 1 })
 
-const Limiter = async (req, res, next) => {
-    try {
-        const ip = req.ip;
-        const now = Date.now();
+const Limiter = ({ maxLimit, timeDelay } = {
+    maxLimit: DEFAULT_MAX_LIMIT,
+    timeDelay: DEFAULT_TIME_DELAY,
+}) => {
+    maxLimit = maxLimit ?? DEFAULT_MAX_LIMIT;
+    timeDelay = timeDelay ?? DEFAULT_TIME_DELAY;
 
-        if (!requests[ip]) {
-            requests[ip] = {
-                count: 0,
-                lastTime: now,
-            };
-            return next();
-        }
+    const requests = {};
 
-        const delay = now - requests[ip].lastTime;
-        if (delay < TIME_DELAY) {
-            requests[ip].count++;
-        } else {
-            requests[ip] = {
-                count: 0,
-                lastTime: now,
-            };
-        }
+    return (req, res, next) => {
+        try {
+            const ip = req.ip;
+            const now = Date.now();
 
-        if (requests[ip].count > MAX_LIMIT) {
-            if (!res.locals.tr) {
-                LangService.tr(req, res, function () { });
+            if (!requests[ip]) {
+                requests[ip] = {
+                    count: 0,
+                    lastTime: now,
+                };
+                return next();
             }
-            LangService.setVars(res, {
-                time: Math.round(delay / 1000),
-            })
-            return res.send(res.locals.tr.req_limit_reached);
-        }
 
-        return next();
-    } catch (err) {
-        return res.redirect("back");
+            const delay = now - requests[ip].lastTime;
+            if (delay < timeDelay) {
+                requests[ip].count++;
+            } else {
+                requests[ip] = {
+                    count: 0,
+                    lastTime: now,
+                };
+            }
+
+            if (requests[ip].count > maxLimit) {
+                if (!res.locals.tr) {
+                    LangService.tr(req, res, function () { });
+                }
+                LangService.setVars(res, {
+                    time: Math.round((timeDelay - delay) / 1000),
+                })
+                return res.send(res.locals.tr.req_limit_reached);
+            }
+
+            return next();
+        } catch (err) {
+            return res.redirect("back");
+        }
     }
 };
 

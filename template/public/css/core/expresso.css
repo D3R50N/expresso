@@ -79,3 +79,13 @@ a[href="/logout"] {
   padding: .6em 2em;
   border-radius: .3em;
 }
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px var(--expresso-lighten);
+  }
+  100% {
+    box-shadow: 0 0 0 30px rgba(0, 0, 0, 0);
+  }
+}

@@ -19,6 +19,7 @@ const RoutesService = require("./src/services/routes");
 const DBService = require("./src/services/db");
 const Limiter = require("./src/middlewares/limiter");
 const ThemeMode = require("./src/middlewares/themeMode");
+const Utils = require("./src/utils");
 
 const app = express();
 
@@ -35,8 +36,8 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 app.use(LangService.tr);
 app.use(RoutesService.router);
 
-app.use(Limiter); // Limit user request frequency
 app.use(ThemeMode); // get user current theme mode
+app.use(Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) })); // Limit users to 5 requests each 2s
 
 // EJS Template Engine
 app.set("view engine", "ejs");

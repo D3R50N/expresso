@@ -86,7 +86,7 @@ class CookieService {
         return num;
     }
   }
-}
+  }
 
 
 module.exports = CookieService;
