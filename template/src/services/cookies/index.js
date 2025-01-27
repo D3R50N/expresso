@@ -73,20 +73,28 @@ class CookieService {
     const num = str.match(numRegex);
     const suffix = str.replace(numRegex, "");
 
+    const s = 1000;
+    const m = 60 * s;
+    const h = 60 * m;
+    const d = 24 * h;
+    const y = 365 * d;
+
     switch (suffix) {
       case "s":
-        return num * 1000;
+        return num * s;
       case "m":
-        return num * 60 * 1000;
+        return num * m;
       case "h":
-        return num * 60 * 60 * 1000;
+        return num * h;
       case "d":
-        return num * 24 * 60 * 60 * 1000;
+        return num * d;
+      case "y":
+        return num * y;
       default:
         return num;
     }
   }
-  }
+}
 
 
 module.exports = CookieService;

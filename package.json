@@ -12,7 +12,7 @@
     "express.js",
     "node.js"
   ],
-  "homepage": "https://expresso.maxdev.tech/",
+  "homepage": "https://expresso.maxdev.tech",
   "repository": {
     "type": "git",
     "url": "https://github.com/D3R50N/expresso.git"

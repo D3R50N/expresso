@@ -161,7 +161,7 @@ class UploadService {
   static file(filename) {
     const p = path.join(
       __dirname,
-      "../../",
+      "../../../",
       this.#fileFolder({
         originalname: filename,
       }),

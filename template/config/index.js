@@ -39,7 +39,7 @@ module.exports = {
   parserLimit: process.env.PARSER_LIMIT || "50mb",
   parserJsonLimit: process.env.PARSER_JSON_LIMIT || "50mb",
   jwtMaxDate: process.env.JWT_MAX_DATE || "30d",
-  cookieMaxDate: process.env.COOKIE_MAX_DATE || "30d",
+  cookieMaxDate: process.env.COOKIE_MAX_DATE || "1y",
 
   authToken: process.env.AUTH_TOKEN || "_tk",
 

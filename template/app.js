@@ -23,6 +23,9 @@ const Utils = require("./src/utils");
 
 const app = express();
 
+const apiLimiter = Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) });// Limit users to 5 requests each 2s
+
+
 // Static Files
 const buildDir = "public";
 app.use(express.static(path.join(__dirname, buildDir)));
@@ -37,7 +40,6 @@ app.use(LangService.tr);
 app.use(RoutesService.router);
 
 app.use(ThemeMode); // get user current theme mode
-app.use(Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) })); // Limit users to 5 requests each 2s
 
 // EJS Template Engine
 app.set("view engine", "ejs");
@@ -46,7 +48,7 @@ app.set("views", "src/views");
 // Routes
 app.use(UploadService.router());
 app.use(ROUTES.BASE, web_routes);
-app.use(ROUTES.API_BASE, api_routes);
+app.use(ROUTES.API_BASE, apiLimiter , api_routes);
 
 // Services
 RoutesService.getAppRoutes(app);

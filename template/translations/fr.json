@@ -16,7 +16,7 @@
   "login_google": "Connexion via Google+",
   "login_t": "Connexion",
   "logout": "Se déconnecter",
-  "need_verify": "Ce compte $email doit être vérifié",
+  "need_verify": "Ce compte ${email} doit être vérifié",
   "no_account": "Vous n'avez pas encore de compte?",
   "or": "ou",
   "password": "Mot de passe",

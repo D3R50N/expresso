@@ -18,6 +18,9 @@ const Limiter = require("./src/middlewares/limiter");
 
 const app = express();
 
+const apiLimiter = Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) });// Limit users to 5 requests each 2s
+
+
 app.use(cors());
 app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
@@ -26,12 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 app.use(LangService.tr);
 app.use(RoutesService.router);
 
-app.use(Limiter({ maxLimit: 5, timeDelay: Utils.toMs({ s: 2 }) })); // Limit users to 5 requests each 2s
-
-
 // Routes
 app.use(UploadService.router());
-app.use(ROUTES.API_BASE, api_routes);
+app.use(ROUTES.API_BASE, apiLimiter, api_routes);
 
 // Services
 RoutesService.getAppRoutes(app);
