@@ -1,7 +1,7 @@
 const Errors = require("../../../config/errors");
 const User = require("../../models/userModel");
 const AuthService = require("../../services/auth");
-const UploadService = require("../../services/upload");
+const MailService = require("../../services/mail");
 
 class ApiAuthController {
   static async login(req, res) {
@@ -9,11 +9,15 @@ class ApiAuthController {
     try {
       const { email, password } = req.body;
 
-      if (!email) {
+      if (!email || email.trim() == "") {
         return errors.json(errors.code.EMAIL_REQUIRED);
       }
 
-      if (!password) {
+      if (!MailService.isEmail(email)) {
+        return errors.json(errors.code.INVALID_EMAIL);
+      }
+
+      if (!password || password.trim() == "") {
         return errors.json(errors.code.PASSWORD_REQUIRED);
       }
 
@@ -41,8 +45,17 @@ class ApiAuthController {
     try {
       const user = new User(req.body);
 
+      user.email = user.email?.trim();
       user.password = user.password?.trim();
       user.name = user.name?.trim();
+
+      if (!user.email) {
+        return errors.json(errors.code.EMAIL_REQUIRED);
+      }
+
+      if (!MailService.isEmail(user.email)) {
+        return errors.json(errors.code.INVALID_EMAIL);
+      }
 
       if (!user.password) {
         return errors.json(errors.code.PASSWORD_REQUIRED);
