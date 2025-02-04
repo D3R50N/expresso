@@ -94,6 +94,7 @@ exports.code = Object.freeze({
     status: 401,
     code: "USER_NOT_AUTHORIZED",
   },
+
   USER_NOT_AUTHENTICATED: {
     message: "Utilisateur non authentifié",
     status: 401,
@@ -113,6 +114,11 @@ exports.code = Object.freeze({
     message: "Votre session a expiré.",
     status: 440,
     code: "SESSION_EXPIRED",
+  },
+  INVALID_LOGIN_METHOD: {
+    message: "La méthode de connexion est invalide pour ce compte.",
+    status: 401,
+    code: "INVALID_LOGIN_METHOD",
   },
   ACCOUNT_LOCKED: {
     message: "Compte bloqué. Contactez l'assistance.",

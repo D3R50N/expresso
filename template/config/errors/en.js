@@ -104,6 +104,12 @@ exports.code = Object.freeze({
     status: 404,
     code: "PAGE_NOT_FOUND",
   },
+  INVALID_LOGIN_METHOD: {
+    "message": "The login method is invalid for this account.",
+    "status": 401,
+    "code": "INVALID_LOGIN_METHOD"
+  },
+
   SESSION_EXPIRED: {
     message: "Your session has expired.",
     status: 440,

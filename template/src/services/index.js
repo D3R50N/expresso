@@ -5,11 +5,7 @@ const config = require("../../config");
  * Needs a configuration file
  */
 class AppService {
-  /**
-   * The configuration object for the application.
-   *
-   * @type {Object}
-   */
+
   static config = config;
 
   /**

@@ -11,13 +11,11 @@ if (process.env.MONGODB_URI) {
     process.env.MONGODB_URI = process.env.MONGODB_URI.split("?")[0];
   }
 
-  dbUri = `${process.env.MONGODB_URI}/${process.env.MONGODB_DBNAME}${
-    params ? "?" + params : ""
-  }`;
+  dbUri = `${process.env.MONGODB_URI}/${process.env.MONGODB_DBNAME}${params ? "?" + params : ""
+    }`;
 } else {
-  dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${
-    process.env.MONGODB_PORT || 27017
-  }/${process.env.MONGODB_DBNAME}`;
+  dbUri = `${process.env.MONGODB_HOST || "127.0.0.1"}:${process.env.MONGODB_PORT || 27017
+    }/${process.env.MONGODB_DBNAME}`;
 
   if (process.env.MONGODB_USER && process.env.SETUP_DB == "true") {
     if (!process.env.MONGODB_PASSWORD)
@@ -42,7 +40,10 @@ module.exports = {
   cookieMaxDate: process.env.COOKIE_MAX_DATE || "1y",
 
   authToken: process.env.AUTH_TOKEN || "_tk",
+  googleAuthClientId: process.env.GOOGLE_AUTH_CLIENT_ID,
+  googleAuthClientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
 
+  appId: process.env.APP_ID || "",
   appLang: process.env.APP_LANG || "en",
 
   stripePublishableKey: process.env.STRIPE_PK,

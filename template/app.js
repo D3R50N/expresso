@@ -20,6 +20,8 @@ const DBService = require("./src/services/db");
 const Limiter = require("./src/middlewares/limiter");
 const ThemeMode = require("./src/middlewares/themeMode");
 const Utils = require("./src/utils");
+const GoogleAuthService = require("./src/services/auth/google");
+const AuthController = require("./src/controllers/web/authController");
 
 const app = express();
 
@@ -35,7 +37,7 @@ app.use(cookieParser(config.jwtSecret));
 app.use(bodyParser.json({ limit: config.parserJsonLimit }));
 app.use(bodyParser.urlencoded({ extended: true, limit: config.parserLimit }));
 
-// Useful middlewares
+// Middlewares
 app.use(LangService.tr);
 app.use(RoutesService.router);
 
@@ -47,11 +49,12 @@ app.set("views", "src/views");
 
 // Routes
 app.use(UploadService.router());
+app.use(GoogleAuthService.middleware(AuthController.googleLogin))
 app.use(ROUTES.BASE, web_routes);
 app.use(ROUTES.API_BASE, apiLimiter , api_routes);
 
 // Services
-RoutesService.getAppRoutes(app);
+RoutesService.getRoutes(app);
 ClientRouterService.init(app);
 
 // Error Handling Middleware

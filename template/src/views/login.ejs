@@ -60,10 +60,12 @@
           <i class="icon-brand-facebook-f"></i>
           <%= tr.login_facebook%>
         </button>
-        <button class="google-login ripple-effect">
-          <i class="icon-brand-google-plus-g"></i>
-          <%= tr.login_google%>
-        </button>
+        <a href="/auth/google">
+          <button class="google-login ripple-effect" style="max-width: 100%;">
+            <i class="icon-brand-google-plus-g"></i>
+            <%= tr.login_google%>
+          </button>
+        </a>
       </div>
     </div>
   </div>

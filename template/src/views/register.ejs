@@ -23,6 +23,9 @@
       border: 1px solid #aaa;
       padding: 10px;
       border-radius: 5px;
+      max-width: 380px;
+      overflow: hidden;
+
     }
 
     #img_label:hover {
@@ -41,34 +44,30 @@
         <h3>[##NAME##] <%= tr.by %> Expresso</h3>
         <span>
           <%= tr.already_have_account %>
-            <a href="<%= routes.login %>">
-              <%= tr.login %>
-            </a>
+          <a href="<%= routes.login %>">
+            <%= tr.login %>
+          </a>
         </span>
       </div>
 
       <form action="<%= routes.register %>" method="post" id="register-form" enctype="multipart/form-data">
         <div class="input-with-icon-left">
           <i class="icon-line-awesome-user"></i>
-          <input type="text" class="input-text with-border" name="name" id="name" placeholder="<%= tr.fullname %>"
-            required value="<%= locals.body?.name %>" />
+          <input type="text" class="input-text with-border" name="name" id="name" placeholder="<%= tr.fullname %>" required value="<%= locals.body?.name %>" />
         </div>
         <div class="input-with-icon-left">
           <i class="icon-material-baseline-mail-outline"></i>
-          <input type="text" class="input-text with-border" name="email" id="email"
-            placeholder="<%= tr.email_address %>" required value="<%= locals.body?.email %>" />
+          <input type="text" class="input-text with-border" name="email" id="email" placeholder="<%= tr.email_address %>" required value="<%= locals.body?.email %>" />
         </div>
 
         <div class="input-with-icon-left" title="Should be at least 8 characters long" data-tippy-placement="bottom">
           <i class="icon-material-outline-lock"></i>
-          <input type="password" class="input-text with-border" name="password" id="password"
-            placeholder="<%= tr.password %>" required />
+          <input type="password" class="input-text with-border" name="password" id="password" placeholder="<%= tr.password %>" required />
         </div>
 
         <div class="input-with-icon-left">
           <i class="icon-material-outline-lock"></i>
-          <input type="password" class="input-text with-border" name="password-repeat" id="password-repeat"
-            placeholder="<%= tr.repeat_password %>" required />
+          <input type="password" class="input-text with-border" name="password-repeat" id="password-repeat" placeholder="<%= tr.repeat_password %>" required />
         </div>
 
         <label for="image" id="img_label">
@@ -78,10 +77,9 @@
       </form>
 
       <!-- Button -->
-      <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit"
-        form="register-form">
+      <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit" form="register-form">
         <%= tr.register %>
-          <i class="icon-material-outline-arrow-right-alt"></i>
+        <i class="icon-material-outline-arrow-right-alt"></i>
       </button>
 
       <!-- Social Login -->
@@ -93,33 +91,35 @@
           <i class="icon-brand-facebook-f"></i>
           <%= tr.register_facebook %>
         </button>
-        <button class="google-login ripple-effect">
-          <i class="icon-brand-google-plus-g"></i>
-          <%= tr.register_google %>
-        </button>
+        <a href="/auth/google">
+          <button class="google-login ripple-effect" style="max-width: 100%;">
+            <i class="icon-brand-google-plus-g"></i>
+            <%= tr.register_google%>
+          </button>
+        </a>
       </div>
     </div>
   </div>
 
   <% if (locals.error) { %>
-    <div id="error">
-      <%= error.message %>
-    </div>
-    <% } %>
+  <div id="error">
+    <%= error.message %>
+  </div>
+  <% } %>
 
-      <script>
-        const img_label = document.getElementById("img_label");
-        const image = document.getElementById("image");
+  <script>
+    const img_label = document.getElementById("img_label");
+    const image = document.getElementById("image");
 
-        image.addEventListener("change", () => {
-          const file = image.files[0];
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            img_label.innerText = file.name;
-          };
-          reader.readAsDataURL(file);
-        });
-      </script>
+    image.addEventListener("change", () => {
+      const file = image.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        img_label.innerText = file.name;
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
 </body>
 
 </html>

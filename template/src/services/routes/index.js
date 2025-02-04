@@ -17,30 +17,69 @@ class RoutesService {
    *
    * @returns {string} - The full URL of the request.
    */
-  static getUrl(req) {
+  static getReqUrl(req) {
     return this.host + req.originalUrl;
+  }
+
+  static getFullUrl(route = "") {
+    if (!route.startsWith("/")) route = "/" + route;
+
+    return this.host + route;
   }
 
   /**
    * Logs all available routes and their HTTP methods.
+   * @param {boolean} sortByMethod - Wheither if routes should be grouped by their method 
    */
-  static log() {
-    const methods = new Set(
-      this.routes
-        .map((r) => r.methods)
-        .join(",")
-        .split(",")
-        .map((r) => r.trim().toUpperCase())
-    );
+  static log(sortByMethod = false) {
 
-    for (let method of methods.keys()) {
-      console.log(`\n[${method}]`);
-      for (let route of this.routes
-        .filter((r) => r.methods.toUpperCase() == method)
-        .sort((a, b) => a.path.localeCompare(b.path))) {
-        console.log(
-          `  ${route.path} \t (${route.middlewares.length} middlewares)`
-        );
+    function repeat(str = "", count = 1) {
+      let out = "";
+      for (let index = 0; index < count; index++) {
+        out += str;
+      }
+      return out;
+    }
+
+    if (sortByMethod) {
+      const methods = new Set(this.routes.map((r) => r.methods));
+      const max_length = [...this.routes].sort((a, b) => b.path.length - a.path.length)[0].path.length;
+      const length = 20 + max_length;
+
+      for (let method of methods.keys()) {
+        console.log();
+        console.log(repeat("─", length));
+        console.log(`[${method}]`);
+        console.log(repeat("─", length));
+
+        for (let route of this.routes
+          .filter((r) => r.methods.toUpperCase() == method)
+          .sort((a, b) => a.path.localeCompare(b.path))) {
+          let sx = ` │ ${route.middlewares.length} handlers`;
+          console.log(
+            `${route.path.padEnd(length - sx.length, " ")}${sx}`
+          );
+
+        }
+      }
+    }
+    else {
+      const paths = new Set(this.routes.map((r) => r.path)
+        .sort((a, b) => a.localeCompare(b)));
+      const max_length = [...paths.keys()].sort((a, b) => b.length - a.length)[0].length;
+      const length = 30 + max_length;
+
+      for (let path of paths.keys()) {
+        console.log(repeat("─", length));
+        for (let route of this.routes
+          .filter((r) => r.path == path)
+          .sort((a, b) => a.path.localeCompare(b.path))) {
+          let px = `[${route.methods}]\t│ `;
+          let sx = ` │ ${route.middlewares.length} handlers`;
+          console.log(
+            `${px}${route.path.padEnd(length - sx.length - 10, " ")}${sx}`
+          );
+        }
       }
     }
   }
@@ -67,7 +106,7 @@ class RoutesService {
    *
    * @param {Object} app - The Express application instance.
    */
-  static getAppRoutes(app) {
+  static getRoutes(app) {
     this.routes = [];
     function traverseStack(stack, basePath = "") {
       stack.forEach((layer) => {

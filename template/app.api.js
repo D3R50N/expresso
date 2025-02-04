@@ -34,7 +34,7 @@ app.use(UploadService.router());
 app.use(ROUTES.API_BASE, apiLimiter, api_routes);
 
 // Services
-RoutesService.getAppRoutes(app);
+RoutesService.getRoutes(app);
 
 // Error Handling Middleware
 app.use(errorHandler.e404);

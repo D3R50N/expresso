@@ -145,6 +145,7 @@ class UploadService {
    */
   static deleteUploadedFiles(files) {
     files.forEach((file) => {
+      if (!file) return;
       fs.unlink(file.path, (err) => {
         if (err) console.error(`Error deleting file: ${file.path}`, err);
       });

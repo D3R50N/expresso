@@ -3,9 +3,7 @@ const router = express.Router();
 const homeController = require("../../controllers/web/homeController");
 const ROUTES = require("../routes");
 const webAuthMiddleware = require("../../middlewares/web/authMiddleware");
-const loginController = require("../../controllers/web/loginController");
-const logoutController = require("../../controllers/web/logoutController");
-const registerController = require("../../controllers/web/registerController");
+const authController = require("../../controllers/web/authController");
 const preventLogin = require("../../middlewares/web/preventLogin");
 const UploadService = require("../../services/upload");
 const accountMiddleware = require("../../middlewares/web/accountMiddleware");
@@ -29,7 +27,7 @@ router.get(
   accountController.verifyAccount
 );
 
-router.get(ROUTES.RESET_PASSWORD,preventLogin, accountController.passwordReset);
+router.get(ROUTES.RESET_PASSWORD, preventLogin, accountController.passwordReset);
 router.get(
   `${ROUTES.RESET_PASSWORD}${ROUTES.FIND}`,
   preventLogin,
@@ -47,15 +45,15 @@ router.post(
 );
 
 // AUTH
-router.get(ROUTES.LOGIN, preventLogin, loginController.index);
-router.get(ROUTES.LOGOUT, logoutController.index);
-router.get(ROUTES.REGISTER, preventLogin, registerController.index);
+router.get(ROUTES.LOGIN, preventLogin, authController.login);
+router.get(ROUTES.LOGOUT, authController.logout);
+router.get(ROUTES.REGISTER, preventLogin, authController.register);
 
-router.post(ROUTES.LOGIN, loginController.post);
+router.post(ROUTES.LOGIN, authController.loginSubmit);
 router.post(
   ROUTES.REGISTER,
   UploadService.middleware.single("image"),
-  registerController.post
+  authController.registerSubmit
 );
 
 module.exports = router;
