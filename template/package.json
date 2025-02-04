@@ -15,7 +15,8 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.21"
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.9"
   },
   "main": "app.js",
   "name": "[##PKG_NAME##]",
