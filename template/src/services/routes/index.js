@@ -77,7 +77,7 @@ class RoutesService {
           let px = route.methods.length > 5 ? `[${route.methods}]│ ` : `[${route.methods}]\t│ `;
           let sx = ` │ ${route.middlewares.length} handlers`;
           console.log(
-            `${px}${route.path.padEnd(length - sx.length - 10, " ")}${sx}`
+            `${px}${route.path.padEnd(length - sx.length + (route.middlewares.length.toString().length) - 10, " ")}${sx}`
           );
         }
       }
