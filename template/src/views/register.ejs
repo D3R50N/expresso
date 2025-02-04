@@ -91,12 +91,12 @@
           <i class="icon-brand-facebook-f"></i>
           <%= tr.register_facebook %>
         </button>
-        <a href="<%=routes.google_auth%>">
+        <form action="<%=routes.google_auth%>">
           <button class="google-login ripple-effect" style="max-width: 100%;">
-            <i class="icon-brand-google-plus-g"></i>
+            <i class="icon-brand-google-plus-g tr" style="background: transparent !important;"></i>
             <%= tr.register_google%>
           </button>
-        </a>
+        </form>
       </div>
     </div>
   </div>
