@@ -10,8 +10,8 @@ class GoogleAuthService {
     static #CLIENT_ID = AppService.config.googleAuthClientId;
     static #CLIENT_SECRET = AppService.config.googleAuthClientSecret;
 
-    static #_route = "/auth/google";
-    static #_redirectTo = "/auth/google/callback";
+    static #_route = ROUTES.GOOGLE_AUTH;
+    static #_redirectTo = ROUTES.GOOGLE_AUTH_REDIRECT;
     static #_scope = "profile email";
 
 

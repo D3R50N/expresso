@@ -20,6 +20,9 @@ const ROUTES = {
   AUTH: "/auth",
   AUTH_LOGIN: "/login",
   AUTH_REGISTER: "/register",
+
+  GOOGLE_AUTH: "/o/oauth2/auth/google",
+  GOOGLE_AUTH_REDIRECT: "/o/oauth2/auth/google/redirect",
 };
 
 module.exports = ROUTES;
