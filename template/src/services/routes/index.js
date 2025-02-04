@@ -74,7 +74,7 @@ class RoutesService {
         for (let route of this.routes
           .filter((r) => r.path == path)
           .sort((a, b) => a.path.localeCompare(b.path))) {
-          let px = `[${route.methods}]\t│ `;
+          let px = route.methods.length > 5 ? `[${route.methods}]│ ` : `[${route.methods}]\t│ `;
           let sx = ` │ ${route.middlewares.length} handlers`;
           console.log(
             `${px}${route.path.padEnd(length - sx.length - 10, " ")}${sx}`
