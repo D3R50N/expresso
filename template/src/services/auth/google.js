@@ -21,12 +21,7 @@ class GoogleAuthService {
      * @returns Object to URL query string
      */
     static querystring(obj) {
-        let s = [];
-        for (let k of Object.keys(obj)) {
-            const v = obj[k];
-            s.push(k + "=" + v);
-        }
-        return s.join("&");
+        return new URLSearchParams(obj).toString();
     }
 
     /**
@@ -96,9 +91,9 @@ class GoogleAuthService {
                 if (handler) return handler(req, res);
 
                 res.redirect(ROUTES.BASE);
-            } catch (error) {
-                console.error(error);
-                res.send('Erreur lors de l\'authentification.');
+            } catch (err) {
+                console.error(err);
+                return error.json(error.code.INVALID_REQUEST);
             }
         });
 
