@@ -7,6 +7,9 @@ class ApiAuthController {
   static async login(req, res) {
     const errors = Errors.from(req, res);
     try {
+
+      req.body.email = req.body.email?.toLowerCase();
+
       const { email, password } = req.body;
 
       if (!email || email.trim() == "") {
@@ -45,7 +48,7 @@ class ApiAuthController {
     try {
       const user = new User(req.body);
 
-      user.email = user.email?.trim();
+      user.email = user.email?.trim().toLowerCase();
       user.password = user.password?.trim();
       user.name = user.name?.trim();
 

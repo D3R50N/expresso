@@ -30,6 +30,9 @@ class AuthController {
   static async loginSubmit(req, res) {
     const errors = Errors.from(req, res);
     try {
+
+      req.body.email = req.body.email?.toLowerCase();
+      
       const { email, password } = req.body;
 
       if (!email) {
@@ -106,6 +109,9 @@ class AuthController {
   static async registerSubmit(req, res) {
     const errors = Errors.from(req, res);
     try {
+      
+      req.body.email = req.body.email?.toLowerCase();
+      
       const user = new User(req.body);
 
       if (!MailService.isEmail(user.email)) {
