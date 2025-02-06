@@ -19,7 +19,7 @@ const renderPasswordResetForm = (link, res, error) => {
   const html = `<form action="${ROUTES.API_BASE}${ROUTES.USERS}${
     ROUTES.RESET_PASSWORD
   }/${
-    link.path
+    link?.path
   }" method="post" style="display: flex; flex-direction: column;font-family:sans-serif;
 gap: 1em; height: 100vh; max-width: 300px;  margin: 0 auto; justify-content: center;"><input type="text" name="password" id="" style="padding: 1em;" placeholder="Nouveau mot de passe"><input type="submit" value="${
     res.locals.tr.password_reset_title
