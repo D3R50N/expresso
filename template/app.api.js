@@ -15,6 +15,7 @@ const LangService = require("./src/services/lang");
 const RoutesService = require("./src/services/routes");
 const DBService = require("./src/services/db");
 const Limiter = require("./src/middlewares/limiter");
+const Utils = require("./src/utils");
 
 const app = express();
 
