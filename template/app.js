@@ -50,8 +50,8 @@ app.set("views", "src/views");
 // Routes
 app.use(UploadService.router());
 app.use(GoogleAuthService.middleware(AuthController.googleLogin))
-app.use(ROUTES.BASE, web_routes);
 app.use(ROUTES.API_BASE, apiLimiter , api_routes);
+app.use(ROUTES.BASE, web_routes);
 
 // Services
 RoutesService.getRoutes(app);
